@@ -2,9 +2,9 @@
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
 
-namespace CryptoTools.API.Objects.PairRelations
+namespace CryptoTools.API.Objects.Offers
 {
-    public class Relation
+    public class Offer
     {
         public int ex1id = -1;
         public int ex2id = -1;
@@ -16,7 +16,7 @@ namespace CryptoTools.API.Objects.PairRelations
         public ExchangePair ex1pair = null;
         public ExchangePair ex2pair = null;
 
-        public Relation()
+        public Offer()
         {
         }
 
@@ -55,9 +55,9 @@ namespace CryptoTools.API.Objects.PairRelations
             ex1pair = ex2pair;
         }
 
-        public Relation GetReversed()
+        public Offer GetReversed()
         {
-            return new Relation()
+            return new Offer()
             {
                 ex1id = ex2id,
                 ex1 = ex2,

@@ -1,4 +1,4 @@
-﻿namespace CryptoTools.API.Objects.PairRelations
+﻿namespace CryptoTools.API.Objects.Offers
 {
     public struct OfferCoefficients
     {

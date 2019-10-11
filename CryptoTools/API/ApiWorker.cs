@@ -1,7 +1,7 @@
 ﻿using CryptoTools.API.Exchanges;
 using CryptoTools.API.Objects;
 using CryptoTools.API.Objects.Coins;
-using CryptoTools.API.Objects.PairRelations;
+using CryptoTools.API.Objects.Offers;
 using CryptoTools.API.Objects.Pairs;
 using CryptoTools.Units;
 using Newtonsoft.Json;
@@ -22,7 +22,7 @@ namespace CryptoTools.API
     {
         public List<Exchange> exchanges;
         public ConcurrentDictionary<int, PairInfo> pairs;
-        public List<Relation> offers;
+        public List<Offer> offers;
         public List<TransferDeal> deals;
         private Timer TickerTimer;
         public UpdatedHandler OnTickersUpdated;
@@ -70,7 +70,7 @@ namespace CryptoTools.API
             }
             Task.WaitAll(tasks);
 
-            offers = new List<Relation>();
+            offers = new List<Offer>();
             InitializePairs();
 
             SetWssOrderBooks(GetOffersPairKeyList());
@@ -354,7 +354,7 @@ namespace CryptoTools.API
                             }
             }
 
-            // Create offer relation objects
+            // Create offer objects
             offers.Clear();
             foreach (KeyValuePair<int, PairInfo> bp in pairs)
                 for (int exid1 = 0; exid1 < exchanges.Count - 1; exid1++)
@@ -362,16 +362,16 @@ namespace CryptoTools.API
                         for (int exid2 = exid1 + 1; exid2 < exchanges.Count; exid2++)
                             if (exchanges[exid2].pair.Supported(bp.Key))
                             {
-                                Relation r = new Relation();
-                                r.ex1id = exid1;
-                                r.ex2id = exid2;
-                                r.pairid1 = bp.Key;
-                                r.pairid2 = bp.Key;
-                                r.ex1 = exchanges[exid1];
-                                r.ex2 = exchanges[exid2];
-                                r.ex1pair = exchanges[exid1].pair[bp.Key];
-                                r.ex2pair = exchanges[exid2].pair[bp.Key];
-                                offers.Add(r);
+                                Offer offer = new Offer();
+                                offer.ex1id = exid1;
+                                offer.ex2id = exid2;
+                                offer.pairid1 = bp.Key;
+                                offer.pairid2 = bp.Key;
+                                offer.ex1 = exchanges[exid1];
+                                offer.ex2 = exchanges[exid2];
+                                offer.ex1pair = exchanges[exid1].pair[bp.Key];
+                                offer.ex2pair = exchanges[exid2].pair[bp.Key];
+                                offers.Add(offer);
 
                                 bp.Value.usable = true;
                             }
@@ -379,19 +379,19 @@ namespace CryptoTools.API
                                 for (int spid = 0; spid < bp.Value.SimilarPairs.Count; spid++)
                                     if (exchanges[exid2].pair.Supported(bp.Value.SimilarPairs[spid]))
                                     {
-                                        Relation r = new Relation();
-                                        r.ex1id = exid1;
-                                        r.ex2id = exid2;
-                                        r.pairid1 = bp.Key;
-                                        r.pairid2 = bp.Value.SimilarPairs[spid];
-                                        r.ex1 = exchanges[exid1];
-                                        r.ex2 = exchanges[exid2];
-                                        r.ex1pair = exchanges[exid1].pair[bp.Key];
-                                        r.ex2pair = exchanges[exid2].pair[bp.Value.SimilarPairs[spid]];
-                                        offers.Add(r);
+                                        Offer offer = new Offer();
+                                        offer.ex1id = exid1;
+                                        offer.ex2id = exid2;
+                                        offer.pairid1 = bp.Key;
+                                        offer.pairid2 = bp.Value.SimilarPairs[spid];
+                                        offer.ex1 = exchanges[exid1];
+                                        offer.ex2 = exchanges[exid2];
+                                        offer.ex1pair = exchanges[exid1].pair[bp.Key];
+                                        offer.ex2pair = exchanges[exid2].pair[bp.Value.SimilarPairs[spid]];
+                                        offers.Add(offer);
 
-                                        pairs[r.pairid1].usable = true;
-                                        pairs[r.pairid2].usable = true;
+                                        pairs[offer.pairid1].usable = true;
+                                        pairs[offer.pairid2].usable = true;
                                     }
         }
 

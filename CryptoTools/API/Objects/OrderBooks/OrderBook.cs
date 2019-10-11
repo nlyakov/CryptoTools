@@ -31,59 +31,11 @@ namespace CryptoTools.API.Objects.OrderBooks
         public OrderBook(ExchangePair owner)
         {
             pair = owner;
-            queue = new ConcurrentQueue<string>();
+            queue = new ConcurrentQueue<string>(); 
             bid = new OrderBookRecords(enOrderBookType.obBid);
             ask = new OrderBookRecords(enOrderBookType.obAsk);
             //OBUpdateHandler = OBUpdateMode1;
             OBChangedHandler = null;
-        }
-
-        public async void ResumeReceive()
-        {
-            if (!await ssReceive.WaitAsync(0))
-                return;
-            try
-            {
-                if (ParseSocketDataHandler == null)
-                    return;
-                if (ReceiveTask != null)
-                    return;
-
-                ReceiveTask = Receive();
-            }
-            finally
-            {
-                ssReceive.Release();
-            }
-        }
-
-        private async Task Receive()
-        {
-            string msg;
-            OrderBookStruct[] data;
-            while (!queue.IsEmpty)
-                if (queue.TryDequeue(out msg))
-                {
-                    LastUpdate = ParseSocketDataHandler(msg, out data);
-                    lock (bid.raw)
-                    {
-                        lock (ask.raw)
-                        {
-                            foreach (OrderBookStruct order in data)
-                                OBUpdate(order);
-                        }
-                    }
-
-                    if (!pair.OrderBookAvailable)
-                        pair.OrderBookAvailable = true;
-
-                    //ProcessChangeEvents();
-                }
-
-            await ssReceive.WaitAsync();
-            try { ReceiveTask = null; }
-            finally { ssReceive.Release(); }
-            ProcessChangeEvents();
         }
 
         public void OBUpdate(OrderBookStruct order)

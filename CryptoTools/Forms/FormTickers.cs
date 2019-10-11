@@ -1,5 +1,5 @@
 ﻿using CryptoTools.API.Objects.Coins;
-using CryptoTools.API.Objects.PairRelations;
+using CryptoTools.API.Objects.Offers;
 using CryptoTools.API.Objects.Pairs;
 using CryptoTools.Units;
 using System;
@@ -79,39 +79,39 @@ namespace CryptoTools.Forms
 
             for (int rid = 0; rid < fm.api.offers.Count; rid++)
             {
-                Relation r = fm.api.offers[rid];
-                if (r.pairid1 != r.pairid2)
+                Offer offer = fm.api.offers[rid];
+                if (offer.pairid1 != offer.pairid2)
                     continue;
 
-                int row = fm.api.pairs[r.pairid1].index;
+                int row = fm.api.pairs[offer.pairid1].index;
                 if (coinfilter != "")
-                    if (Coin.Symbol(r.ex1pair.coin1).Contains(coinfilter) || Coin.Symbol(r.ex1pair.coin2).Contains(coinfilter))
+                    if (Coin.Symbol(offer.ex1pair.coin1).Contains(coinfilter) || Coin.Symbol(offer.ex1pair.coin2).Contains(coinfilter))
                         dgvTicker.Rows[row].Visible = true;
 
                 if (!is_full_checked)
-                    if (r.TickerAvailable() && fm.api.pairs[r.pairid1].usable)
+                    if (offer.TickerAvailable() && fm.api.pairs[offer.pairid1].usable)
                         dgvTicker.Rows[row].Visible = true;
 
-                if (r.TickerAvailable())
+                if (offer.TickerAvailable())
                 {
-                    OfferCoefficients coeff = r.TickerCalc(r.ex1pair.ticker, r.ex2pair.ticker);
-                    dgvTicker.Rows[row].Cells[r.ex1id + 1].Value += Environment.NewLine + r.ex2.Name + ":" +
-                            "   " + char.ConvertFromUtf32(0x2192) + " " + coeff.taker1taker2.ToString("P") + "   " + char.ConvertFromUtf32(0x2190) + " " + coeff.taker2taker1.ToString("P") +
-                            "   " + char.ConvertFromUtf32(0x2192) + " " + coeff.taker1maker2.ToString("P") + "   " + char.ConvertFromUtf32(0x2190) + " " + coeff.taker2taker1.ToString("P");
-                    dgvTicker.Rows[row].Cells[r.ex2id + 1].Value += Environment.NewLine + r.ex1.Name + ":" +
-                            "   " + char.ConvertFromUtf32(0x2192) + " " + coeff.taker2taker1.ToString("P") + "   " + char.ConvertFromUtf32(0x2190) + " " + coeff.taker1taker2.ToString("P") +
-                            "   " + char.ConvertFromUtf32(0x2192) + " " + coeff.taker2maker1.ToString("P") + "   " + char.ConvertFromUtf32(0x2190) + " " + coeff.taker1maker2.ToString("P");
-                    double maxdirect = Math.Max(coeff.taker1taker2, coeff.taker2taker1);
-                    double maxwait = Math.Max(coeff.taker1maker2, coeff.taker2maker1);
+                    OfferCoefficients oc = offer.TickerCalc(offer.ex1pair.ticker, offer.ex2pair.ticker);
+                    dgvTicker.Rows[row].Cells[offer.ex1id + 1].Value += Environment.NewLine + offer.ex2.Name + ":" +
+                            "   " + char.ConvertFromUtf32(0x2192) + " " + oc.taker1taker2.ToString("P") + "   " + char.ConvertFromUtf32(0x2190) + " " + oc.taker2taker1.ToString("P") +
+                            "   " + char.ConvertFromUtf32(0x2192) + " " + oc.taker1maker2.ToString("P") + "   " + char.ConvertFromUtf32(0x2190) + " " + oc.taker2taker1.ToString("P");
+                    dgvTicker.Rows[row].Cells[offer.ex2id + 1].Value += Environment.NewLine + offer.ex1.Name + ":" +
+                            "   " + char.ConvertFromUtf32(0x2192) + " " + oc.taker2taker1.ToString("P") + "   " + char.ConvertFromUtf32(0x2190) + " " + oc.taker1taker2.ToString("P") +
+                            "   " + char.ConvertFromUtf32(0x2192) + " " + oc.taker2maker1.ToString("P") + "   " + char.ConvertFromUtf32(0x2190) + " " + oc.taker1maker2.ToString("P");
+                    double maxdirect = Math.Max(oc.taker1taker2, oc.taker2taker1);
+                    double maxwait = Math.Max(oc.taker1maker2, oc.taker2maker1);
                     if (maxdirect >= 0.01)
                     {
-                        dgvTicker.Rows[row].Cells[r.ex1id + 1].Style.BackColor = System.Drawing.Color.FromArgb(0xFF, 0x00, 0xDB, 0x69);
-                        dgvTicker.Rows[row].Cells[r.ex1id + 1].Style.BackColor = System.Drawing.Color.FromArgb(0xFF, 0x00, 0xDB, 0x69);
+                        dgvTicker.Rows[row].Cells[offer.ex1id + 1].Style.BackColor = System.Drawing.Color.FromArgb(0xFF, 0x00, 0xDB, 0x69);
+                        dgvTicker.Rows[row].Cells[offer.ex1id + 1].Style.BackColor = System.Drawing.Color.FromArgb(0xFF, 0x00, 0xDB, 0x69);
                     }
                     else if (maxwait > 0.01)
                     {
-                        dgvTicker.Rows[row].Cells[r.ex2id + 1].Style.BackColor = System.Drawing.Color.FromArgb(0xFF, 0xFF, 0xF0, 0x4F);
-                        dgvTicker.Rows[row].Cells[r.ex2id + 1].Style.BackColor = System.Drawing.Color.FromArgb(0xFF, 0xFF, 0xF0, 0x4F);
+                        dgvTicker.Rows[row].Cells[offer.ex2id + 1].Style.BackColor = System.Drawing.Color.FromArgb(0xFF, 0xFF, 0xF0, 0x4F);
+                        dgvTicker.Rows[row].Cells[offer.ex2id + 1].Style.BackColor = System.Drawing.Color.FromArgb(0xFF, 0xFF, 0xF0, 0x4F);
                     }
                 }
             }

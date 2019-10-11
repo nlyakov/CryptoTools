@@ -1,14 +1,12 @@
-﻿using CryptoTools.API.Exchanges;
-using CryptoTools.API.Objects.Coins;
+﻿using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.OrderBooks;
-using CryptoTools.API.Objects.PairRelations;
+using CryptoTools.API.Objects.Offers;
 using CryptoTools.API.Objects.Pairs;
 using CryptoTools.Units;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Forms;
 
 namespace CryptoTools.Forms
@@ -23,7 +21,7 @@ namespace CryptoTools.Forms
 
         internal class GridRowStruct
         {
-            public Relation r;
+            public Offer offer;
             public string Pair { get; set; }
             public string Exchange1 { get; set; }
             public string Exchange2 { get; set; }
@@ -127,18 +125,18 @@ namespace CryptoTools.Forms
 
         private void InitList()
         {
-            void AddRowListItem(Relation r)
+            void AddRowListItem(Offer offer)
             {
-                string pairstr = Coin.Symbol(fm.api.pairs[r.pairid1].coin1) + "/" + Coin.Symbol(fm.api.pairs[r.pairid1].coin2);
-                if (r.pairid2 != r.pairid1)
-                    pairstr += " to " + Coin.Symbol(fm.api.pairs[r.pairid2].coin1) + "/" + Coin.Symbol(fm.api.pairs[r.pairid2].coin2);
+                string pairstr = Coin.Symbol(fm.api.pairs[offer.pairid1].coin1) + "/" + Coin.Symbol(fm.api.pairs[offer.pairid1].coin2);
+                if (offer.pairid2 != offer.pairid1)
+                    pairstr += " to " + Coin.Symbol(fm.api.pairs[offer.pairid2].coin1) + "/" + Coin.Symbol(fm.api.pairs[offer.pairid2].coin2);
 
                 FullList.Add(new GridRowStruct()
                 {
-                    r = r,
+                    offer = offer,
                     Pair = pairstr,
-                    Exchange1 = r.ex1.Name,
-                    Exchange2 = r.ex2.Name,
+                    Exchange1 = offer.ex1.Name,
+                    Exchange2 = offer.ex2.Name,
                     Amount = "",
                     TakerTaker = "",
                     MakerTaker = "",
@@ -159,10 +157,10 @@ namespace CryptoTools.Forms
             List<int> pklist = new List<int>();
             for (int i = 0; i < WorkingList.Count; i++)
             {
-                if (!pklist.Contains(WorkingList[i].r.pairid1))
-                    pklist.Add(WorkingList[i].r.pairid1);
-                if (!pklist.Contains(WorkingList[i].r.pairid2))
-                    pklist.Add(WorkingList[i].r.pairid2);
+                if (!pklist.Contains(WorkingList[i].offer.pairid1))
+                    pklist.Add(WorkingList[i].offer.pairid1);
+                if (!pklist.Contains(WorkingList[i].offer.pairid2))
+                    pklist.Add(WorkingList[i].offer.pairid2);
             }
             int[] pkeys = new int[pklist.Count];
             pklist.CopyTo(pkeys, 0);
@@ -188,15 +186,15 @@ namespace CryptoTools.Forms
             if (id == -1)
                 return;
 
-            Relation r = WorkingList[id].r;
+            Offer offer = WorkingList[id].offer;
 
             Task[] tasks = new Task[2];
-            tasks[0] = Task.Factory.StartNew(() => r.ex1.RestUpdateOrderBook(r.pairid1));
-            tasks[1] = Task.Factory.StartNew(() => r.ex2.RestUpdateOrderBook(r.pairid2));
+            tasks[0] = Task.Factory.StartNew(() => offer.ex1.RestUpdateOrderBook(offer.pairid1));
+            tasks[1] = Task.Factory.StartNew(() => offer.ex2.RestUpdateOrderBook(offer.pairid2));
             await Task.WhenAll(tasks);
 
             UpdateGridCalc();
-            ShowOrderBooks(r);
+            ShowOrderBooks(offer);
         }
 
         private void UpdateRowCalc(GridRowStruct rs)
@@ -211,18 +209,18 @@ namespace CryptoTools.Forms
                 dgvOffers.Rows[i].Cells[2].Style.BackColor = System.Drawing.Color.White;*/
 
 
-            if (rs.r.OrderBookAvailable())
+            if (rs.offer.OrderBookAvailable())
             {
                 double pair_amount = trade_amount;
-                if (Coin.Info(rs.r.ex1pair.coin2).type == enCoinType.ctCrypto)
-                    pair_amount = Math.Round(trade_amount / fm.api.CoinAnyPrice(rs.r.ex1pair.coin2), 4);
+                if (Coin.Info(rs.offer.ex1pair.coin2).type == enCoinType.ctCrypto)
+                    pair_amount = Math.Round(trade_amount / fm.api.CoinAnyPrice(rs.offer.ex1pair.coin2), 4);
                 if (pair_amount > 0)
                     rs.Amount = pair_amount.ToString();
 
-                OfferCoefficients offer = rs.r.OrderBookCalc(rs.r.ex1pair.book, rs.r.ex2pair.book, pair_amount);
-                rs.TakerTaker = offer.taker1taker2.ToString("P");
-                rs.MakerTaker = offer.maker1taker2.ToString("P");
-                rs.TakerMaker = offer.taker1maker2.ToString("P");
+                OfferCoefficients oc = rs.offer.OrderBookCalc(rs.offer.ex1pair.book, rs.offer.ex2pair.book, pair_amount);
+                rs.TakerTaker = oc.taker1taker2.ToString("P");
+                rs.MakerTaker = oc.maker1taker2.ToString("P");
+                rs.TakerMaker = oc.taker1maker2.ToString("P");
             }
             else
             {
@@ -242,7 +240,7 @@ namespace CryptoTools.Forms
             dgvOffers.Invoke(new MethodInvoker(delegate { dgvOffers.Refresh(); }));
         }
 
-        private void ShowOrderBooks(Relation r)
+        private void ShowOrderBooks(Offer offer)
         {
             void ShowBook(DataGridView grid, ExchangePair ep, OrderBookRecords offers)
             {
@@ -274,20 +272,20 @@ namespace CryptoTools.Forms
                 }
             }
 
-            MakeHandler(0, r.ex1pair.book);
-            MakeHandler(1, r.ex2pair.book);
-            r.ex1pair.book.MakeSnapshot();
-            r.ex2pair.book.MakeSnapshot();
-            lblExchange1.Text = "Exchange: " + r.ex1.Name;
-            lblPair1.Text = "Pair: " + fm.api.pairs[r.pairid1].PairName;
+            MakeHandler(0, offer.ex1pair.book);
+            MakeHandler(1, offer.ex2pair.book);
+            offer.ex1pair.book.MakeSnapshot();
+            offer.ex2pair.book.MakeSnapshot();
+            lblExchange1.Text = "Exchange: " + offer.ex1.Name;
+            lblPair1.Text = "Pair: " + fm.api.pairs[offer.pairid1].PairName;
             //lblLastUpdate1.Text = r.ex1pair.book.LastUpdate.ToString();
-            ShowBook(dgvEx1BookBid, r.ex1pair, r.ex1pair.book.bid);
-            ShowBook(dgvEx1BookAsk, r.ex1pair, r.ex1pair.book.ask);
-            lblExchange2.Text = "Exchange: " + r.ex2.Name;
-            lblPair2.Text = "Pair: " + fm.api.pairs[r.pairid2].PairName;
+            ShowBook(dgvEx1BookBid, offer.ex1pair, offer.ex1pair.book.bid);
+            ShowBook(dgvEx1BookAsk, offer.ex1pair, offer.ex1pair.book.ask);
+            lblExchange2.Text = "Exchange: " + offer.ex2.Name;
+            lblPair2.Text = "Pair: " + fm.api.pairs[offer.pairid2].PairName;
             //lblLastUpdate2.Text = r.ex2pair.book.ToString();
-            ShowBook(dgvEx2BookBid, r.ex2pair, r.ex2pair.book.bid);
-            ShowBook(dgvEx2BookAsk, r.ex2pair, r.ex2pair.book.ask);
+            ShowBook(dgvEx2BookBid, offer.ex2pair, offer.ex2pair.book.bid);
+            ShowBook(dgvEx2BookAsk, offer.ex2pair, offer.ex2pair.book.ask);
         }
 
         private void MakeHandler(int evid, OrderBook ob)
@@ -386,16 +384,16 @@ namespace CryptoTools.Forms
             if (id == -1)
                 return;
 
-            ShowOrderBooks(WorkingList[id].r);
+            ShowOrderBooks(WorkingList[id].offer);
         }
 
         private void FilterIndexChanged(object sender, EventArgs e)
         {
             WorkingList = FullList.ToList();
             if (cbCoin1.SelectedIndex > 0)
-                WorkingList = WorkingList.FindAll(p => fm.api.pairs[p.r.pairid1].coin1 == Coin.AddOrGet(cbCoin1.SelectedItem.ToString())).ToList();
+                WorkingList = WorkingList.FindAll(p => fm.api.pairs[p.offer.pairid1].coin1 == Coin.AddOrGet(cbCoin1.SelectedItem.ToString())).ToList();
             if (cbCoin2.SelectedIndex > 0)
-                WorkingList = WorkingList.FindAll(p => fm.api.pairs[p.r.pairid1].coin2 == Coin.AddOrGet(cbCoin2.SelectedItem.ToString()) || fm.api.pairs[p.r.pairid2].coin2 == Coin.AddOrGet(cbCoin2.SelectedItem.ToString()));
+                WorkingList = WorkingList.FindAll(p => fm.api.pairs[p.offer.pairid1].coin2 == Coin.AddOrGet(cbCoin2.SelectedItem.ToString()) || fm.api.pairs[p.offer.pairid2].coin2 == Coin.AddOrGet(cbCoin2.SelectedItem.ToString()));
             if (cbExchange1.SelectedIndex > 0)
                 WorkingList = WorkingList.FindAll(p => p.Exchange1 == cbExchange1.SelectedItem.ToString());
             if (cbExchange2.SelectedIndex > 0)

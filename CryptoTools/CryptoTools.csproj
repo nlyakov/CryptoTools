@@ -110,8 +110,8 @@
     <Compile Include="API\Objects\OrderBooks\OrderBook.cs" />
     <Compile Include="API\Objects\OrderBooks\OrderBookRecords.cs" />
     <Compile Include="API\Objects\OrderBooks\OrderBookStruct.cs" />
-    <Compile Include="API\Objects\PairRelations\OfferCoefficients.cs" />
-    <Compile Include="API\Objects\PairRelations\Relation.cs" />
+    <Compile Include="API\Objects\Offers\OfferCoefficients.cs" />
+    <Compile Include="API\Objects\Offers\Offer.cs" />
     <Compile Include="API\Objects\Pairs\ExchangePair.cs" />
     <Compile Include="API\Objects\Pairs\PairInfo.cs" />
     <Compile Include="API\REST\RestBinance.cs" />
