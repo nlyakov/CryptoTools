@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoTools", "CryptoTools\CryptoTools.csproj", "{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B6C53B5-221A-478B-9DEE-41933339B8F4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {257A420F-0C2E-4E5A-95C2-6692C9C12F6A}
+	EndGlobalSection
+EndGlobal
