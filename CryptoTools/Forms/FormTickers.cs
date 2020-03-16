@@ -1,7 +1,7 @@
 ﻿using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.Offers;
 using CryptoTools.API.Objects.Pairs;
-using CryptoTools.Units;
+using CryptoTools.Generic;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;

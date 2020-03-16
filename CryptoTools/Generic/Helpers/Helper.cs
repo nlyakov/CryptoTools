@@ -1,7 +1,6 @@
-﻿using CryptoTools.API.Objects.Pairs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace CryptoTools.Units
+namespace CryptoTools.Generic
 {
     public static class Helper
     {
@@ -30,15 +29,6 @@ namespace CryptoTools.Units
                 return data;
             else
                 return defval;
-        }
-
-        internal static bool Supported(this Dictionary<int, ExchangePair> dictionary, int pairid)
-        {
-            if (dictionary.ContainsKey(pairid))
-                if (dictionary[pairid].trade_supported)
-                    return true;
-
-            return false;
         }
 
         internal static string ToStringFull(this double value)

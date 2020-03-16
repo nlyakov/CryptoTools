@@ -2,13 +2,15 @@
 using CryptoTools.API.Interfaces;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using fastJSON;
 
 namespace CryptoTools.API.WSS
 {
@@ -20,7 +22,7 @@ namespace CryptoTools.API.WSS
     {
         static int SubscriptionsPerSocket = 30;
 
-        protected Exchange exObj;
+        internal Exchange exObj;
 
         internal string BaseUrlAuth;
         internal string BaseUrlPub;
@@ -55,7 +57,7 @@ namespace CryptoTools.API.WSS
 
         protected abstract void SubscriptionDoneReceived(sbyte sockid, dynamic resp, string msg);
         protected abstract void OrderBookDataReceived(sbyte sockid, dynamic resp, string msg);
-        protected abstract DateTime OrderBookResponseParser(string msg, out OrderBookStruct[] data);
+        protected abstract DateTime OrderBookResponseParser(dynamic resp, string msg, out OrderBookStruct[] data);
         protected abstract enResponseType ParseResponse(sbyte sockid, dynamic resp);
 
         public void InitSockets()
@@ -75,23 +77,6 @@ namespace CryptoTools.API.WSS
 
         public async void ReConnect()
         {
-            async Task WaitNull()
-            {
-                bool alldone;
-                do
-                {
-                    alldone = true;
-                    for (sbyte i = 0; i < socket.Length; i++)
-                        foreach (KeyValuePair<int, OrderBook> vp in socket[i].subscriptions)
-                            if (vp.Value.ReceiveTask != null)
-                            {
-                                alldone = false;
-                                break;
-                            }
-                } while (!alldone);
-                await Task.CompletedTask;
-            }
-
             if (!await ssReconnect.WaitAsync(0))
                 return;
 
@@ -113,7 +98,6 @@ namespace CryptoTools.API.WSS
                     await Task.WhenAll(ForwardTask);
 
                 QBufer = new ConcurrentQueue<byte[]>();
-                await Task.WhenAll(WaitNull());
 
                 for (sbyte i = 0; i < socket.Length; i++)
                 {
@@ -165,13 +149,17 @@ namespace CryptoTools.API.WSS
 
         private async Task Forward()
         {
+            var expConverter = new ExpandoObjectConverter();
             byte[] message;
             while (!QBufer.IsEmpty)
                 if (QBufer.TryDequeue(out message))
                 {
                     sbyte sockid = (sbyte)message[0];
                     string msg = Encoding.UTF8.GetString(message, 1, message.Length - 1);
-                    dynamic respObj = JsonConvert.DeserializeObject(msg);
+                    //dynamic respObj = JsonConvert.DeserializeObject(msg);
+                    //dynamic respObj = JObject.Parse(msg);
+                    //msg = "[78478,[[0.0000294,1,47619.047619],[0.0000291,1,246],[0.00002902,1,344.58993797],[0.0000031,1,52],[0.0000021,1,15000],[0.000002,1,100000],[0.000001,1,100000],[4e-8,1,20000],[3e-8,1,6000],[2e-8,1,10000],[0.00016993,1,-6603.79668781],[0.00018171,1,-814.7341],[0.00018175,1,-1314.626],[0.00026864,1,-814.7341],[0.00026868,1,-1000],[0.0002698,1,-397.52747961],[0.00029,1,-1000],[0.00049,1,-746.692497],[0.00124,2,-180],[0.0019978,1,-100],[0.00251,2,-152],[0.00299,1,-499.5],[0.073929,1,-100],[0.1194,2,-303.49083346],[0.1494,1,-203.49083346],[0.18922,1,-100],[0.3201,1,-100],[0.5478,1,-100],[0.6654,1,-165.334],[0.9494,1,-100]]]";
+                    object respObj = JSON.ToObject(msg);
 
                     enResponseType rtype = ParseResponse(sockid, respObj);
                     switch (rtype)
@@ -212,7 +200,7 @@ namespace CryptoTools.API.WSS
             int idx = 0;
             for (int i = 0; i < pairidlist.Length; i++)
             {
-                ExchangePair ep = null;
+                ExchangePair ep;
                 if (exObj.pair.TryGetValue(pairidlist[i], out ep))
                     if (ep.trade_supported)
                     {
@@ -235,14 +223,14 @@ namespace CryptoTools.API.WSS
             ob.ParseSocketDataHandler = OrderBookResponseParser;
         }
 
-        internal async void OrderBookReceive(sbyte sockid, int handle, string msg)
+        internal async void OrderBookReceive(sbyte sockid, int handle, dynamic respObj, string msg)
         {
-            while (!socket[sockid].subscriptions.ContainsKey(handle))
+            OrderBook ob;
+            while (!socket[sockid].subscriptions.TryGetValue(handle, out ob))
                 await Task.Delay(100);
-            OrderBook ob = socket[sockid].subscriptions[handle];
 
             OrderBookStruct[] data;
-            ob.LastUpdate = ob.ParseSocketDataHandler(msg, out data);
+            ob.LastUpdate = ob.ParseSocketDataHandler(respObj, msg, out data);
             lock (ob.bid.raw)
             {
                 lock (ob.ask.raw)

@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using static CryptoTools.Logics.Security;
+using static CryptoTools.Generic.Security;
 
 namespace CryptoTools
 {

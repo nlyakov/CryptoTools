@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoTools", "CryptoTools\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3B6C53B5-221A-478B-9DEE-41933339B8F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "..\Test\test\test.csproj", "{6F439497-1E49-458E-A5DE-808954C1F3D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +17,12 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F9C3B4B-71D4-4C8C-B8A4-06503A5D3B97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F439497-1E49-458E-A5DE-808954C1F3D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F439497-1E49-458E-A5DE-808954C1F3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F439497-1E49-458E-A5DE-808954C1F3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F439497-1E49-458E-A5DE-808954C1F3D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,6 +14,7 @@ namespace CryptoTools.API.Objects.OrderBooks
 
     public class OrderBookRecords
     {
+
         public SortedDictionary<double, double> dict;
         public Dictionary<double, double> raw;
         public readonly enOrderBookType type;
@@ -30,18 +31,16 @@ namespace CryptoTools.API.Objects.OrderBooks
 
         public void AddData(double price, double amount)
         {
-
-            if (raw.ContainsKey(price))
-                raw[price] = amount;
-            else
-                raw.Add(price, amount);
+            //if (raw.ContainsKey(price))
+            raw[price] = amount;
+            //else
+            //raw.Add(price, amount);
         }
-
 
         public void DelData(double price)
         {
-            if (raw.ContainsKey(price))
-                raw.Remove(price);
+            //            if (raw.ContainsKey(price))
+            raw.Remove(price);
         }
 
         public void Clear()
@@ -51,7 +50,8 @@ namespace CryptoTools.API.Objects.OrderBooks
 
         public void MakeSnapshot()
         {
-            lock (raw) {
+            lock (raw)
+            {
                 if (type == enOrderBookType.obBid)
                     dict = new SortedDictionary<double, double>(raw, new DescendingComparer<double>());
                 else

@@ -1,6 +1,5 @@
 ﻿using CryptoTools.API;
 using CryptoTools.API.Objects.Coins;
-using CryptoTools.API.REST;
 using CryptoTools.Forms;
 using System;
 using System.Windows.Forms;

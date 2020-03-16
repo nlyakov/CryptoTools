@@ -41,15 +41,17 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\CryptoTools.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>CryptoTools.Program</StartupObject>
@@ -70,15 +72,19 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="fastJSON, Version=2.3.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
+      <HintPath>..\packages\fastJSON.2.3.1\lib\net40\fastJSON.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -113,6 +119,7 @@
     <Compile Include="API\Objects\Offers\OfferCoefficients.cs" />
     <Compile Include="API\Objects\Offers\Offer.cs" />
     <Compile Include="API\Objects\Pairs\ExchangePair.cs" />
+    <Compile Include="API\Objects\Pairs\ExchangePairDict.cs" />
     <Compile Include="API\Objects\Pairs\PairInfo.cs" />
     <Compile Include="API\REST\RestBinance.cs" />
     <Compile Include="API\REST\RestBitstamp.cs" />
@@ -161,7 +168,8 @@
     <Compile Include="Forms\FormOffers.Designer.cs">
       <DependentUpon>FormOffers.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logics\Security.cs" />
+    <Compile Include="Generic\Kernel32.cs" />
+    <Compile Include="Generic\Security.cs" />
     <Compile Include="Forms\Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,7 +178,8 @@
     </Compile>
     <Compile Include="API\ApiWorker.cs" />
     <Compile Include="API\Objects\TransferDeal.cs" />
-    <Compile Include="Units\Helper.cs" />
+    <Compile Include="Generic\GlobalData.cs" />
+    <Compile Include="Generic\Helpers\Helper.cs" />
     <Compile Include="API\Exchanges\Exchange.cs" />
     <Compile Include="API\Exchanges\Kraken.cs" />
     <Compile Include="API\Exchanges\Poloniex.cs" />
@@ -179,6 +188,7 @@
     <Compile Include="API\Objects\TradeObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Generic\DebugLogger.cs" />
     <EmbeddedResource Include="Forms\FormApiKeysAndSecrets.resx">
       <DependentUpon>FormApiKeysAndSecrets.cs</DependentUpon>
     </EmbeddedResource>

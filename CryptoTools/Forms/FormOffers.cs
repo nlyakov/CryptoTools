@@ -1,8 +1,8 @@
 ﻿using CryptoTools.API.Objects.Coins;
-using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Offers;
+using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using CryptoTools.Units;
+using CryptoTools.Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +55,7 @@ namespace CryptoTools.Forms
             void AddIfNotExist(System.Windows.Forms.ComboBox cb, string item)
             {
                 foreach (string cbi in cb.Items)
-                    if (cbi==item)
+                    if (cbi == item)
                         return;
 
                 cb.Items.Add(item);
@@ -309,7 +309,7 @@ namespace CryptoTools.Forms
                     {
                         if (offers.dict.Count == 0)
                         {
-                                grid.RowCount = offers.dict.Count;
+                            grid.RowCount = offers.dict.Count;
                         }
                         else
                         {
@@ -334,28 +334,35 @@ namespace CryptoTools.Forms
                     }));
             }
 
-            if (ob == eventbook[0])
+            try
             {
-                ob.MakeSnapshot();
-                Invoke(new Action(() => { lblLastUpdate1.Text = ob.LastUpdate.ToString(); }));
-                UpdateBook(dgvEx1BookBid, ob.bid);
-                UpdateBook(dgvEx1BookAsk, ob.ask);
-            }
-            else if (ob == eventbook[1])
-            {
-                ob.MakeSnapshot();
-                Invoke(new Action(() => { lblLastUpdate2.Text = ob.LastUpdate.ToString(); }));
-                UpdateBook(dgvEx2BookBid, ob.bid);
-                UpdateBook(dgvEx2BookAsk, ob.ask);
-            }
-            else
-                return;
+                if (ob == eventbook[0])
+                {
+                    ob.MakeSnapshot();
+                    Invoke(new Action(() => { lblLastUpdate1.Text = ob.LastUpdate.ToString(); }));
+                    UpdateBook(dgvEx1BookBid, ob.bid);
+                    UpdateBook(dgvEx1BookAsk, ob.ask);
+                }
+                else if (ob == eventbook[1])
+                {
+                    ob.MakeSnapshot();
+                    Invoke(new Action(() => { lblLastUpdate2.Text = ob.LastUpdate.ToString(); }));
+                    UpdateBook(dgvEx2BookBid, ob.bid);
+                    UpdateBook(dgvEx2BookAsk, ob.ask);
+                }
+                else
+                    return;
 
-            if (dgvOffers.SelectedRows.Count > 0)
+                if (dgvOffers.SelectedRows.Count > 0)
+                {
+                    int id = dgvOffers.SelectedRows[0].Index;
+                    if (id != -1)
+                        UpdateRowCalc(WorkingList[id]);
+                }
+            }
+            catch (Exception e)
             {
-                int id = dgvOffers.SelectedRows[0].Index;
-                if (id != -1)
-                    UpdateRowCalc(WorkingList[id]);
+                RemoveHandlers();
             }
 
         }
@@ -520,12 +527,17 @@ namespace CryptoTools.Forms
             dgvOffers.Refresh();
         }
 
-        private void FormOffers_FormClosing(object sender, FormClosingEventArgs e)
+        private void RemoveHandlers()
         {
             if (eventbook[0] != null)
                 eventbook[0].OBChangedHandler -= OBChanged;
             if (eventbook[1] != null)
                 eventbook[1].OBChangedHandler -= OBChanged;
+        }
+
+        private void FormOffers_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            RemoveHandlers();
         }
     }
 }

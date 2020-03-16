@@ -1,4 +1,5 @@
 ﻿using CryptoTools.API.Objects.OrderBooks;
+using CryptoTools.Generic;
 using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
@@ -21,8 +22,7 @@ namespace CryptoTools.API.WSS
         public Dictionary<int, OrderBook> subscriptions;
         private SemaphoreSlim ssReceive = new SemaphoreSlim(1, 1);
         private SemaphoreSlim ssSend = new SemaphoreSlim(1, 1);
-        //private DateTime dt = DateTime.Now;
-        //private bool crashed = false;
+        DebugLogger logWriter;
 
         public WssSocketObject(WssCommunicator parent, sbyte id)
         {
@@ -36,6 +36,13 @@ namespace CryptoTools.API.WSS
                 socket_uri = new Uri(parent.BaseUrlPub);
             subscriptions = new Dictionary<int, OrderBook>();
             ReceiveTask = null;
+
+            if (GlobalData.SocketLogging)
+            {
+                logWriter = new DebugLogger();
+                logWriter.OpenForWriting(GlobalData.NewFileVolume(wc.exObj.Name, "Socket " + SocketID.ToString() + " [vol{0}].log"));
+                logWriter.BufferAdd(GlobalData.LogFileHeader());
+            }
         }
 
         public async Task Connect()
@@ -54,6 +61,21 @@ namespace CryptoTools.API.WSS
             }
 
             ResumeReceive();
+        }
+
+        async void LogWriteResponce(int BufferSize)
+        {
+            logWriter.BufferAdd(DateTime.Now.ToString("yyyy-MM-dd---HH-mm-ss") + ": Receive - ");
+            logWriter.BufferAdd(DataBuffer, BufferSize);
+            logWriter.BufferAdd(Environment.NewLine);
+
+            if (logWriter.BytesWritten < GlobalData.MaxLogVolume)
+                return;
+
+            logWriter.Close();
+            logWriter = new DebugLogger();
+            logWriter.OpenForWriting(GlobalData.NewFileVolume(wc.exObj.Name, "Socket " + SocketID.ToString() + " [vol{0}].log"));
+            logWriter.BufferAdd(GlobalData.LogFileHeader());
         }
 
         private async void ResumeReceive()
@@ -101,26 +123,34 @@ namespace CryptoTools.API.WSS
                     {
                         await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close response received", CancellationToken.None);
                         makereconnect = true;
+                        if (GlobalData.SocketLogging)
+                            logWriter.BufferAdd(DateTime.Now.ToString("yyyy-MM-dd---HH-mm-ss") + ": Closing" + Environment.NewLine);
                     }
                 }
-                catch
+                catch (Exception e)
                 {
+                    if (GlobalData.SocketLogging)
+                        logWriter.BufferAdd(DateTime.Now.ToString("yyyy-MM-dd---HH-mm-ss") + ": Exception - " + e.Message + Environment.NewLine);
                     makereconnect = true;
                 }
 
                 if (makereconnect || cancellationToken.IsCancellationRequested)
                 {
+                    if (GlobalData.SocketLogging)
+                        logWriter.BufferAdd(DateTime.Now.ToString("yyyy-MM-dd---HH-mm-ss") + ": Reconnecting" + Environment.NewLine);
                     wc.ReConnect();
                     return;
                 }
                 else
                 {
+                    if (GlobalData.SocketLogging)
+                        LogWriteResponce(offset);
                     string timestr = "{\"received\":\"" + DateTime.Now.ToBinary().ToString() + "\",\"data\":";
                     byte[] qb = new byte[offset + 2 + timestr.Length];
                     qb[0] = (byte)SocketID;
-                    Array.Copy(Encoding.UTF8.GetBytes(timestr), 0, qb, 1, timestr.Length);
+                    Buffer.BlockCopy(Encoding.UTF8.GetBytes(timestr), 0, qb, 1, timestr.Length);
                     qb[qb.Length - 1] = (byte)'}';
-                    Array.Copy(DataBuffer, 0, qb, 1 + timestr.Length, offset);
+                    Buffer.BlockCopy(DataBuffer, 0, qb, 1 + timestr.Length, offset);
                     wc.QBufer.Enqueue(qb);
                     wc.ResumeForward();
                 }
@@ -149,6 +179,11 @@ namespace CryptoTools.API.WSS
         public void Dispose()
         {
             ws.Dispose();
+            if (GlobalData.SocketLogging)
+            {
+                logWriter.Close();
+                logWriter.Dispose();
+            }
             GC.SuppressFinalize(this);
         }
     }

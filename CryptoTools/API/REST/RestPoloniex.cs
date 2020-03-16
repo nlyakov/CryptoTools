@@ -4,7 +4,7 @@ using CryptoTools.API.Objects;
 using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using CryptoTools.Units;
+using CryptoTools.Generic;
 using Newtonsoft.Json;
 using System;
 using System.Net;

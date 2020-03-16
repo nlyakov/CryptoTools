@@ -1,5 +1,4 @@
 ﻿using CryptoTools.API.Objects.Coins;
-using CryptoTools.API.REST;
 
 namespace CryptoTools.API.Exchanges
 {

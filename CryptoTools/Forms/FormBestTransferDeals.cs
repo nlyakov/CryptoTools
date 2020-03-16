@@ -1,6 +1,6 @@
 ﻿using CryptoTools.API.Objects;
 using CryptoTools.API.Objects.Coins;
-using CryptoTools.Units;
+using CryptoTools.Generic;
 using System.Windows.Forms;
 
 namespace CryptoTools.Forms

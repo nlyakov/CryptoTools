@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace CryptoTools.Logics
+namespace CryptoTools.Generic
 {
     class Security
     {

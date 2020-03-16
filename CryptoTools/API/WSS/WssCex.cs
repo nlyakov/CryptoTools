@@ -114,20 +114,17 @@ namespace CryptoTools.API.WSS
             OrderBook ob = exObj.pair[handle].book;
 
             OrderBookSubscribed(sockid, handle, ob);
-            OrderBookReceive(sockid, handle, msg);
-            //ob.queue.Enqueue(msg);
-            //ob.ResumeReceive();
+            OrderBookReceive(sockid, handle, resp, msg);
         }
 
         protected override void OrderBookDataReceived(sbyte sockid, dynamic resp, string msg)
         {
             int handle = exObj.FindPairIdx("{1}:{2}", (string)resp.data.data.pair);
-            OrderBookReceive(sockid, handle, msg);
+            OrderBookReceive(sockid, handle, resp, msg);
         }
 
-        protected override DateTime OrderBookResponseParser(string msg, out OrderBookStruct[] data)
+        protected override DateTime OrderBookResponseParser(dynamic respObj, string msg, out OrderBookStruct[] data)
         {
-            dynamic respObj = JsonConvert.DeserializeObject(msg);
             data = new OrderBookStruct[respObj.data.data.bids.Count + respObj.data.data.asks.Count];
 
             int idx = 0;

@@ -1,28 +1,23 @@
 ﻿using CryptoTools.API.Objects.Pairs;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace CryptoTools.API.Objects.OrderBooks
 {
     public delegate void OBChanged(OrderBook ob);
-    public delegate DateTime ParseSocketData(string msg, out OrderBookStruct[] data);
+    public delegate DateTime ParseSocketData(dynamic respObj, string msg, out OrderBookStruct[] data);
     delegate void OBUpdate(OrderBookStruct order);
 
     public class OrderBook
     {
         public ExchangePair pair = null;
-        public ConcurrentQueue<string> queue;
-        public Task ReceiveTask = null;
         public ParseSocketData ParseSocketDataHandler = null;
         //private OBUpdate OBUpdateHandler;
         public OBChanged OBChangedHandler;
         public OrderBookRecords bid;
         public OrderBookRecords ask;
-        private SemaphoreSlim ssReceive = new SemaphoreSlim(1, 1);
         private SemaphoreSlim ssEvent = new SemaphoreSlim(1, 1);
         public DateTime LastUpdate;
 
@@ -31,7 +26,6 @@ namespace CryptoTools.API.Objects.OrderBooks
         public OrderBook(ExchangePair owner)
         {
             pair = owner;
-            queue = new ConcurrentQueue<string>(); 
             bid = new OrderBookRecords(enOrderBookType.obBid);
             ask = new OrderBookRecords(enOrderBookType.obAsk);
             //OBUpdateHandler = OBUpdateMode1;
@@ -58,21 +52,19 @@ namespace CryptoTools.API.Objects.OrderBooks
 
         public async void ProcessChangeEvents()
         {
+            if (OBChangedHandler is null)
+                return;
+
             if (!await ssEvent.WaitAsync(0))
                 return;
             try
             {
-                //OBChangedHandler?.Invoke(this);
+                var eventListeners = OBChangedHandler.GetInvocationList();
 
-                if (OBChangedHandler != null)
+                for (int index = 0; index < eventListeners.Count(); index++)
                 {
-                    var eventListeners = OBChangedHandler.GetInvocationList();
-
-                    for (int index = 0; index < eventListeners.Count(); index++)
-                    {
-                        var methodToInvoke = (OBChanged)eventListeners[index];
-                        methodToInvoke.BeginInvoke(this, EndAsyncEvent, null);
-                    }
+                    var methodToInvoke = (OBChanged)eventListeners[index];
+                    methodToInvoke.BeginInvoke(this, EndAsyncEvent, null);
                 }
             }
             finally

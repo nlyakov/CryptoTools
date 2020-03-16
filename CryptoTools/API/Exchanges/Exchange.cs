@@ -26,7 +26,7 @@ namespace CryptoTools.API.Exchanges
     public abstract class Exchange
     {
         public string Name = "empty";
-        public Dictionary<int, ExchangePair> pair; // List of working pairs
+        public ExchangePairDict pair; // List of working pairs
         public Dictionary<int, ExchangeCoin> coin;
         public bool TickersAvailable = false;
         public bool Initialized = false;
@@ -50,7 +50,7 @@ namespace CryptoTools.API.Exchanges
         public Exchange()
         {
             coin = new Dictionary<int, ExchangeCoin>();
-            pair = new Dictionary<int, ExchangePair>();
+            pair = new ExchangePairDict();
             CustomCoinNames = new Dictionary<int, string>();
         }
 

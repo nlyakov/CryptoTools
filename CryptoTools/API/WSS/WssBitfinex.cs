@@ -101,12 +101,11 @@ namespace CryptoTools.API.WSS
         protected override void OrderBookDataReceived(sbyte sockid, dynamic resp, string msg)
         {
             int handle = (int)resp.data[0];
-            OrderBookReceive(sockid, handle, msg);
+            OrderBookReceive(sockid, handle, resp, msg);
         }
 
-        protected override DateTime OrderBookResponseParser(string msg, out OrderBookStruct[] data)
+        protected override DateTime OrderBookResponseParser(dynamic respObj, string msg, out OrderBookStruct[] data)
         {
-            dynamic respObj = JsonConvert.DeserializeObject(msg);
             if (respObj.data[1][0].GetType().Name.ToString() == "JArray")
             {
                 data = new OrderBookStruct[respObj.data[1].Count];
@@ -136,14 +135,17 @@ namespace CryptoTools.API.WSS
 
         protected override enResponseType ParseResponse(sbyte sockid, dynamic resp)
         {
-            if (resp.data.GetType().Name.ToString() == "JArray")
+            //if (resp.data.GetType().Name.ToString() == "JArray")
+            if (resp.data is Array)
             {
                 if (resp.data.Count > 1)
-                    if (resp.data[1].GetType().Name.ToString() == "JArray")
+                    //if (resp.data[1].GetType().Name.ToString() == "JArray")
+                    if (resp.data[1] is Array)
                         if (resp.data[1].Count > 0)
                             return enResponseType.rtOrderBookData;
             }
-            else if (resp.data.GetType().Name.ToString() == "JObject")
+            //else if (resp.data.GetType().Name.ToString() == "JObject")
+            else if (resp.data is Object)
             {
                 if (resp.data["event"] != null)
                     if (resp.data["event"] == "auth")
