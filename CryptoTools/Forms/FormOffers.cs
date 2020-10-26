@@ -1,8 +1,9 @@
-﻿using CryptoTools.API.Objects.Coins;
+﻿using CefSharp.WinForms;
+using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.Offers;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using CryptoTools.Generic;
+using CryptoTools.Generic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace CryptoTools.Forms
         private FormMain fm;
         private double trade_amount = 100;
         private OrderBook[] eventbook = new OrderBook[2] { null, null };
+        ChromiumWebBrowser browser = new ChromiumWebBrowser(string.Empty);
 
         internal class GridRowStruct
         {
@@ -25,6 +27,8 @@ namespace CryptoTools.Forms
             public string Pair { get; set; }
             public string Exchange1 { get; set; }
             public string Exchange2 { get; set; }
+            public double Exchange1Volume { get; set; }
+            public double Exchange2Volume { get; set; }
             public string Amount { get; set; }
             public string TakerTaker { get; set; }
             public string MakerTaker { get; set; }
@@ -43,6 +47,8 @@ namespace CryptoTools.Forms
             MdiParent = formMain;
             fm = formMain;
 
+            scPairInfo.Panel2.Controls.Add(browser);
+
             InitFilters();
             InitList();
             InitGrid();
@@ -52,7 +58,7 @@ namespace CryptoTools.Forms
 
         private void InitFilters()
         {
-            void AddIfNotExist(System.Windows.Forms.ComboBox cb, string item)
+            void AddIfNotExist(ComboBox cb, string item)
             {
                 foreach (string cbi in cb.Items)
                     if (cbi == item)
@@ -111,14 +117,18 @@ namespace CryptoTools.Forms
             dgvOffers.Columns[1].Width = 70;
             dgvOffers.Columns[2].HeaderText = "Exchange 2";
             dgvOffers.Columns[2].Width = 70;
-            dgvOffers.Columns[3].HeaderText = "Аmount";
-            dgvOffers.Columns[3].Width = 60;
-            dgvOffers.Columns[4].HeaderText = "Taker" + Environment.NewLine + "Taker";
-            dgvOffers.Columns[4].Width = 60;
-            dgvOffers.Columns[5].HeaderText = "Maker" + Environment.NewLine + "Taker";
+            dgvOffers.Columns[3].HeaderText = "Volume 1";
+            dgvOffers.Columns[3].Width = 70;
+            dgvOffers.Columns[4].HeaderText = "Volume 2";
+            dgvOffers.Columns[4].Width = 70;
+            dgvOffers.Columns[5].HeaderText = "Аmount";
             dgvOffers.Columns[5].Width = 60;
-            dgvOffers.Columns[6].HeaderText = "Taker" + Environment.NewLine + "Maker";
+            dgvOffers.Columns[6].HeaderText = "Taker" + Environment.NewLine + "Taker";
             dgvOffers.Columns[6].Width = 60;
+            dgvOffers.Columns[7].HeaderText = "Maker" + Environment.NewLine + "Taker";
+            dgvOffers.Columns[7].Width = 60;
+            dgvOffers.Columns[8].HeaderText = "Taker" + Environment.NewLine + "Maker";
+            dgvOffers.Columns[8].Width = 60;
 
             bs.DataSource = WorkingList;
         }
@@ -137,6 +147,8 @@ namespace CryptoTools.Forms
                     Pair = pairstr,
                     Exchange1 = offer.ex1.Name,
                     Exchange2 = offer.ex2.Name,
+                    Exchange1Volume = offer.ex1pair.CoinVolume(),
+                    Exchange2Volume = offer.ex2pair.CoinVolume(),
                     Amount = "",
                     TakerTaker = "",
                     MakerTaker = "",
@@ -180,7 +192,7 @@ namespace CryptoTools.Forms
             btnStop.Enabled = false;
         }
 
-        private async void BtnUpdateRow_Click(object sender, System.EventArgs e)
+        private async void BtnUpdateRow_Click(object sender, EventArgs e)
         {
             int id = dgvOffers.CurrentCell.RowIndex;
             if (id == -1)
@@ -367,6 +379,34 @@ namespace CryptoTools.Forms
 
         }
 
+        public void ShowChart(string pair1, string pair2)
+        {
+            string html =
+                "<div class=\"tradingview-widget-container\">" +
+                "  <div id=\"tv_container\"></div>" +
+                "  <div class=\"tradingview-widget-copyright\"><a href=\"https://www.tradingview.com/symbols/" + pair1 + pair2 + "/\" rel=\"noopener\" target=\"_blank\"><span class=\"blue-text\">" + pair1 + pair2 + "</span></a> by TradingView</div>" +
+                "  <script type=\"text/javascript\" src=\"https://s3.tradingview.com/tv.js\"></script>" +
+                "  <script type=\"text/javascript\">" +
+                "  new TradingView.widget(" +
+                "  {" +
+                "  \"autosize\": true," +
+                "  \"symbol\": \"" + pair1 + pair2 + "\"," +
+                "  \"interval\": \"D\"," +
+                "  \"timezone\": \"Etc/UTC\"," +
+                "  \"theme\": \"light\"," +
+                "  \"style\": \"1\"," +
+                "  \"locale\": \"en\"," +
+                "  \"toolbar_bg\": \"#f1f3f6\"," +
+                "  \"enable_publishing\": false," +
+                "  \"allow_symbol_change\": true," +
+                "  \"container_id\": \"tv_container\"" +
+                "  });" +
+                "  </script>" +
+                "</div>";
+
+            CefSharp.WebBrowserExtensions.LoadHtml(browser, html, "http://www.tradingview.com/");
+        }
+
         private void EdtTradeAmount_Leave(object sender, EventArgs e)
         {
             double amount;
@@ -390,8 +430,9 @@ namespace CryptoTools.Forms
             int id = dgvOffers.SelectedRows[0].Index;
             if (id == -1)
                 return;
-
+             
             ShowOrderBooks(WorkingList[id].offer);
+            ShowChart(Coin.Symbol(WorkingList[id].offer.ex1pair.coin1), Coin.Symbol(WorkingList[id].offer.ex1pair.coin2));
         }
 
         private void FilterIndexChanged(object sender, EventArgs e)
@@ -512,13 +553,13 @@ namespace CryptoTools.Forms
                     else
                         OffersGridSortOrder = enOffersGridSort.ogsExchange2Asc;
                     break;
-                case 4:
+                case 6:
                     OffersGridSortOrder = enOffersGridSort.ogsTT;
                     break;
-                case 5:
+                case 7:
                     OffersGridSortOrder = enOffersGridSort.ogsMT;
                     break;
-                case 6:
+                case 8:
                     OffersGridSortOrder = enOffersGridSort.ogsTM;
                     break;
             }

@@ -2,9 +2,9 @@
 using CryptoTools.API.Interfaces;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using CryptoTools.Generic.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -31,7 +31,7 @@ namespace CryptoTools.API.WSS
                 WorkState = enWorkingState.wsInitialize;
                 if (auth.Trim().Length > 0)
                 {
-                    dynamic authObj = JsonConvert.DeserializeObject(auth);
+                    dynamic authObj = auth.ToDynamic();
 
                     string user = authObj.user;
                     string key = authObj.key;
@@ -39,11 +39,11 @@ namespace CryptoTools.API.WSS
 
                     hashMaker = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
 
-                    authobj = new JObject
+                    authobj = new JsonObject()
                     {
                         { "e", "auth" },
                         {
-                            "auth", new JObject
+                            "auth", new JsonObject()
                             {
                                 { "key", key },
                                 { "timestamp", (new DateTimeOffset(DateTime.Now)).ToUnixTimeSeconds() },
@@ -70,19 +70,19 @@ namespace CryptoTools.API.WSS
             string signature = BitConverter.ToString(hashMaker.ComputeHash(Encoding.ASCII.GetBytes((string)authobj.auth.timestamp + (string)authobj.auth.key))).Replace("-", "").ToLower();
             authobj.auth.signature = signature;
 
-            return JsonConvert.SerializeObject(authobj);
+            return JsonHelper.ToJson(authobj);
         }
 
         protected override string BuildSubscriptionRequest(ExchangePair ep)
         {
-            dynamic pairObj = new JObject
+            dynamic pairObj = new JsonObject()
             {
                 { "e", "order-book-subscribe" },
                 {
-                    "data",  new JObject
+                    "data", new JsonObject()
                     {
                         {
-                            "pair", new JArray
+                            "pair", new JsonArray()
                             {
                                 ep.name1,
                                 ep.name2
@@ -95,17 +95,17 @@ namespace CryptoTools.API.WSS
                 { "oid", ep.UniqueID() }
             };
 
-            return JsonConvert.SerializeObject(pairObj);
+            return JsonHelper.ToJson(pairObj);
         }
 
         protected override string BuildPongRequest()
         {
-            dynamic pongobj = new JObject
+            dynamic pongobj = new JsonObject()
             {
                 { "e", "pong" },
             };
 
-            return JsonConvert.SerializeObject(pongobj);
+            return JsonHelper.ToJson(pongobj);
         }
 
         protected override void SubscriptionDoneReceived(sbyte sockid, dynamic resp, string msg)

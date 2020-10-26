@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using CryptoTools.Generic.Helpers;
 using System;
 using System.IO;
 using System.Text;
@@ -22,7 +22,7 @@ namespace CryptoTools
             {
                 string data = File.ReadAllText(@"data.key");
                 string decoded = Encoding.UTF8.GetString(Convert.FromBase64String(KeyEncryptor.Decrypt(data, pass)));
-                dynamic jsnObj = JsonConvert.DeserializeObject(decoded);
+                dynamic jsnObj = decoded.ToDynamic();
                 if ((bool)jsnObj.correct)
                     decodedAuth = decoded;
                 return (bool)jsnObj.correct;
@@ -56,7 +56,7 @@ namespace CryptoTools
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Ignore;
+            DialogResult = DialogResult.Ignore;
             return;
         }
     }

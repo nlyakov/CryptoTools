@@ -22,7 +22,7 @@ namespace CryptoTools.API.WSS
         public Dictionary<int, OrderBook> subscriptions;
         private SemaphoreSlim ssReceive = new SemaphoreSlim(1, 1);
         private SemaphoreSlim ssSend = new SemaphoreSlim(1, 1);
-        DebugLogger logWriter;
+        SystemLogger logWriter;
 
         public WssSocketObject(WssCommunicator parent, sbyte id)
         {
@@ -37,11 +37,11 @@ namespace CryptoTools.API.WSS
             subscriptions = new Dictionary<int, OrderBook>();
             ReceiveTask = null;
 
-            if (GlobalData.SocketLogging)
+            if (Settings.SocketLogging)
             {
-                logWriter = new DebugLogger();
-                logWriter.OpenForWriting(GlobalData.NewFileVolume(wc.exObj.Name, "Socket " + SocketID.ToString() + " [vol{0}].log"));
-                logWriter.BufferAdd(GlobalData.LogFileHeader());
+                logWriter = new SystemLogger();
+                logWriter.OpenForWriting(SystemLogger.NewFileVolume(wc.exObj.Name, "Socket " + SocketID.ToString() + " [vol{0}].log"));
+                logWriter.BufferAdd(SystemLogger.LogFileHeader());
             }
         }
 
@@ -69,13 +69,13 @@ namespace CryptoTools.API.WSS
             logWriter.BufferAdd(DataBuffer, BufferSize);
             logWriter.BufferAdd(Environment.NewLine);
 
-            if (logWriter.BytesWritten < GlobalData.MaxLogVolume)
+            if (logWriter.BytesWritten < Settings.MaxLogVolume)
                 return;
 
             logWriter.Close();
-            logWriter = new DebugLogger();
-            logWriter.OpenForWriting(GlobalData.NewFileVolume(wc.exObj.Name, "Socket " + SocketID.ToString() + " [vol{0}].log"));
-            logWriter.BufferAdd(GlobalData.LogFileHeader());
+            logWriter = new SystemLogger();
+            logWriter.OpenForWriting(SystemLogger.NewFileVolume(wc.exObj.Name, "Socket " + SocketID.ToString() + " [vol{0}].log"));
+            logWriter.BufferAdd(SystemLogger.LogFileHeader());
         }
 
         private async void ResumeReceive()
@@ -123,27 +123,27 @@ namespace CryptoTools.API.WSS
                     {
                         await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close response received", CancellationToken.None);
                         makereconnect = true;
-                        if (GlobalData.SocketLogging)
+                        if (Settings.SocketLogging)
                             logWriter.BufferAdd(DateTime.Now.ToString("yyyy-MM-dd---HH-mm-ss") + ": Closing" + Environment.NewLine);
                     }
                 }
                 catch (Exception e)
                 {
-                    if (GlobalData.SocketLogging)
+                    if (Settings.SocketLogging)
                         logWriter.BufferAdd(DateTime.Now.ToString("yyyy-MM-dd---HH-mm-ss") + ": Exception - " + e.Message + Environment.NewLine);
                     makereconnect = true;
                 }
 
                 if (makereconnect || cancellationToken.IsCancellationRequested)
                 {
-                    if (GlobalData.SocketLogging)
+                    if (Settings.SocketLogging)
                         logWriter.BufferAdd(DateTime.Now.ToString("yyyy-MM-dd---HH-mm-ss") + ": Reconnecting" + Environment.NewLine);
                     wc.ReConnect();
                     return;
                 }
                 else
                 {
-                    if (GlobalData.SocketLogging)
+                    if (Settings.SocketLogging)
                         LogWriteResponce(offset);
                     string timestr = "{\"received\":\"" + DateTime.Now.ToBinary().ToString() + "\",\"data\":";
                     byte[] qb = new byte[offset + 2 + timestr.Length];
@@ -179,7 +179,7 @@ namespace CryptoTools.API.WSS
         public void Dispose()
         {
             ws.Dispose();
-            if (GlobalData.SocketLogging)
+            if (Settings.SocketLogging)
             {
                 logWriter.Close();
                 logWriter.Dispose();

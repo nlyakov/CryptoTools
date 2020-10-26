@@ -1,11 +1,12 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace CryptoTools.Generic
 {
-    public class DebugLogger : IDisposable
+    public class SystemLogger : IDisposable
     {
         private const uint BlockSize = 128 * 1024; // 500KB
 
@@ -18,7 +19,7 @@ namespace CryptoTools.Generic
         public int BytesWritten;
 
 
-        public DebugLogger()
+        public SystemLogger()
         {
             tmpBuffer = new byte[BlockSize];
             BufferIdx = 0;
@@ -35,7 +36,7 @@ namespace CryptoTools.Generic
             GC.SuppressFinalize(this);
         }
 
-        ~DebugLogger()
+        ~SystemLogger()
         {
             Close();
             UnpinBuffer();
@@ -45,6 +46,26 @@ namespace CryptoTools.Generic
         {
             if (bhandle.IsAllocated)
                 bhandle.Free();
+        }
+
+        public static string NewFileVolume(string FolderName, string FileName)
+        {
+            string fpath = Settings.LogPath + FolderName + "\\";
+            Directory.CreateDirectory(fpath);
+
+            fpath += FileName;
+            int i = 1;
+            while (File.Exists(string.Format(fpath, i.ToString().PadLeft(4, '0'))))
+                i++;
+            return string.Format(fpath, i.ToString().PadLeft(4, '0'));
+        }
+
+        public static string LogFileHeader()
+        {
+            return
+                new string('-', 70) + Environment.NewLine +
+                DateTime.Now.ToString("yyyy-MM-dd---HH-mm-ss") + ": Log started" + Environment.NewLine +
+                new string('-', 70) + Environment.NewLine;
         }
 
         public void BufferAdd(byte[] data, int datalength)

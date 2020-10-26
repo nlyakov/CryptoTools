@@ -4,8 +4,9 @@ using CryptoTools.API.Objects;
 using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using Newtonsoft.Json;
+using CryptoTools.Generic.Helpers;
 using System;
+using System.Windows;
 
 namespace CryptoTools.API.REST
 {
@@ -26,7 +27,7 @@ namespace CryptoTools.API.REST
 
                 if (auth.Trim().Length > 0)
                 {
-                    dynamic authObj = JsonConvert.DeserializeObject(auth);
+                    dynamic authObj = auth.ToDynamic();
 
                     string key = authObj.key;
                     string secret = authObj.secret;
@@ -45,16 +46,20 @@ namespace CryptoTools.API.REST
 
         public override void Initialize()
         {
+            int i=0;
             try
             {
                 string resp = pubClient.DownloadString(BaseUrlPub + "api/v1/exchangeInfo");
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 // Init supported pairs and margin pairs
                 int coin1, coin2;
                 string name1, name2;
-                for (int i = 0; i < respObj.symbols.Count; i++)
+                for (i = 0; i < respObj.symbols.Count; i++)
                 {
+                    if ((string)respObj.symbols[i].status == "BREAK")
+                        continue;
+
                     name1 = respObj.symbols[i].baseAsset;
                     name2 = respObj.symbols[i].quoteAsset;
 
@@ -75,7 +80,6 @@ namespace CryptoTools.API.REST
                         name1 = name1,
                         name2 = name2,
                         pair = (string)respObj.symbols[i].symbol,
-                        //((string)respObj.symbols[i].status == "TRADING"),
                         qty_precision = respObj.symbols[i].baseAssetPrecision,
                         price_precision = respObj.symbols[i].quotePrecision,
                         trade_supported = ((bool)respObj.symbols[i].isSpotTradingAllowed && (string)respObj.symbols[i].status == "TRADING"),
@@ -87,9 +91,9 @@ namespace CryptoTools.API.REST
 
                 exObj.Initialized = true;
             }
-            catch
+            catch (Exception e)
             {
-
+                MessageBox.Show(i.ToString() + ": " + e.Message);
             }
         }
 
@@ -100,7 +104,7 @@ namespace CryptoTools.API.REST
                 WorkState = enWorkingState.wsUpdateTicker;
 
                 string resp = pubClient.DownloadString(BaseUrlPub + "api/v3/ticker/bookTicker");
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 for (int i = 0; i < respObj.Count; i++)
                 {
@@ -134,7 +138,7 @@ namespace CryptoTools.API.REST
                 WorkState = enWorkingState.wsGetOrderBook;
 
                 string resp = pubClient.DownloadString(BaseUrlPub + "api/v1/depth?symbol=" + exObj.pair[pairid].pair);
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 ref OrderBook ob = ref exObj.pair[pairid].book;
 

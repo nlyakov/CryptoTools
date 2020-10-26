@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormOffers));
             this.dgvOffers = new System.Windows.Forms.DataGridView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -51,20 +51,21 @@
             this.cbCoin1 = new System.Windows.Forms.ComboBox();
             this.cbExchange2 = new System.Windows.Forms.ComboBox();
             this.cbExchange1 = new System.Windows.Forms.ComboBox();
-            this.dgvEx2BookAsk = new System.Windows.Forms.DataGridView();
-            this.dgvEx2BookBid = new System.Windows.Forms.DataGridView();
+            this.scPairInfo = new System.Windows.Forms.SplitContainer();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.toolStripContainer2 = new System.Windows.Forms.ToolStripContainer();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.dgvEx1BookBid = new System.Windows.Forms.DataGridView();
             this.dgvEx1BookAsk = new System.Windows.Forms.DataGridView();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.toolStripContainer2 = new System.Windows.Forms.ToolStripContainer();
-            this.toolStripContainer3 = new System.Windows.Forms.ToolStripContainer();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.lblExchange1 = new System.Windows.Forms.ToolStripLabel();
             this.lblPair1 = new System.Windows.Forms.ToolStripLabel();
             this.lblLastUpdate1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripContainer3 = new System.Windows.Forms.ToolStripContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.dgvEx2BookBid = new System.Windows.Forms.DataGridView();
+            this.dgvEx2BookAsk = new System.Windows.Forms.DataGridView();
+            this.toolStrip3 = new System.Windows.Forms.ToolStrip();
             this.lblExchange2 = new System.Windows.Forms.ToolStripLabel();
             this.lblPair2 = new System.Windows.Forms.ToolStripLabel();
             this.lblLastUpdate2 = new System.Windows.Forms.ToolStripLabel();
@@ -81,47 +82,50 @@
             this.splitContainer1.SuspendLayout();
             this.pnlGrid.SuspendLayout();
             this.pnlFilters.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEx2BookAsk)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEx2BookBid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEx1BookBid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEx1BookAsk)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.scPairInfo)).BeginInit();
+            this.scPairInfo.Panel1.SuspendLayout();
+            this.scPairInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
+            this.toolStripContainer2.ContentPanel.SuspendLayout();
+            this.toolStripContainer2.TopToolStripPanel.SuspendLayout();
+            this.toolStripContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
             this.splitContainer4.SuspendLayout();
-            this.toolStripContainer2.ContentPanel.SuspendLayout();
-            this.toolStripContainer2.TopToolStripPanel.SuspendLayout();
-            this.toolStripContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEx1BookBid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEx1BookAsk)).BeginInit();
+            this.toolStrip2.SuspendLayout();
             this.toolStripContainer3.ContentPanel.SuspendLayout();
             this.toolStripContainer3.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer3.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEx2BookBid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEx2BookAsk)).BeginInit();
             this.toolStrip3.SuspendLayout();
             this.SuspendLayout();
             // 
             // dgvOffers
             // 
             this.dgvOffers.AllowUserToResizeRows = false;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvOffers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvOffers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvOffers.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvOffers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvOffers.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvOffers.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvOffers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvOffers.Location = new System.Drawing.Point(0, 0);
             this.dgvOffers.MultiSelect = false;
@@ -131,7 +135,7 @@
             this.dgvOffers.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvOffers.RowTemplate.Height = 20;
             this.dgvOffers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvOffers.Size = new System.Drawing.Size(611, 631);
+            this.dgvOffers.Size = new System.Drawing.Size(784, 631);
             this.dgvOffers.TabIndex = 2;
             this.dgvOffers.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvOffers_ColumnHeaderMouseClick);
             this.dgvOffers.SelectionChanged += new System.EventHandler(this.DgvOffers_SelectionChanged);
@@ -228,11 +232,11 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1438, 652);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1611, 652);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
-            this.toolStripContainer1.Size = new System.Drawing.Size(1438, 699);
+            this.toolStripContainer1.Size = new System.Drawing.Size(1611, 699);
             this.toolStripContainer1.TabIndex = 4;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -247,7 +251,7 @@
             this.lblOpportunities});
             this.statusStrip1.Location = new System.Drawing.Point(0, 0);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1438, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1611, 22);
             this.statusStrip1.TabIndex = 0;
             // 
             // lblOpportunities
@@ -271,9 +275,9 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1438, 652);
-            this.splitContainer1.SplitterDistance = 611;
+            this.splitContainer1.Panel2.Controls.Add(this.scPairInfo);
+            this.splitContainer1.Size = new System.Drawing.Size(1611, 652);
+            this.splitContainer1.SplitterDistance = 784;
             this.splitContainer1.TabIndex = 3;
             // 
             // pnlGrid
@@ -282,7 +286,7 @@
             this.pnlGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlGrid.Location = new System.Drawing.Point(0, 21);
             this.pnlGrid.Name = "pnlGrid";
-            this.pnlGrid.Size = new System.Drawing.Size(611, 631);
+            this.pnlGrid.Size = new System.Drawing.Size(784, 631);
             this.pnlGrid.TabIndex = 4;
             // 
             // pnlFilters
@@ -294,7 +298,7 @@
             this.pnlFilters.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlFilters.Location = new System.Drawing.Point(0, 0);
             this.pnlFilters.Name = "pnlFilters";
-            this.pnlFilters.Size = new System.Drawing.Size(611, 21);
+            this.pnlFilters.Size = new System.Drawing.Size(784, 21);
             this.pnlFilters.TabIndex = 3;
             // 
             // cbCoin2
@@ -343,65 +347,19 @@
             this.cbExchange1.TabIndex = 0;
             this.cbExchange1.SelectedIndexChanged += new System.EventHandler(this.FilterIndexChanged);
             // 
-            // dgvEx2BookAsk
+            // scPairInfo
             // 
-            this.dgvEx2BookAsk.AllowUserToAddRows = false;
-            this.dgvEx2BookAsk.AllowUserToDeleteRows = false;
-            this.dgvEx2BookAsk.AllowUserToResizeRows = false;
-            this.dgvEx2BookAsk.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvEx2BookAsk.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEx2BookAsk.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvEx2BookAsk.Location = new System.Drawing.Point(0, 0);
-            this.dgvEx2BookAsk.Name = "dgvEx2BookAsk";
-            this.dgvEx2BookAsk.RowHeadersVisible = false;
-            this.dgvEx2BookAsk.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEx2BookAsk.Size = new System.Drawing.Size(409, 311);
-            this.dgvEx2BookAsk.TabIndex = 6;
+            this.scPairInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scPairInfo.Location = new System.Drawing.Point(0, 0);
+            this.scPairInfo.Name = "scPairInfo";
+            this.scPairInfo.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // dgvEx2BookBid
+            // scPairInfo.Panel1
             // 
-            this.dgvEx2BookBid.AllowUserToAddRows = false;
-            this.dgvEx2BookBid.AllowUserToDeleteRows = false;
-            this.dgvEx2BookBid.AllowUserToResizeRows = false;
-            this.dgvEx2BookBid.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvEx2BookBid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEx2BookBid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvEx2BookBid.Location = new System.Drawing.Point(0, 0);
-            this.dgvEx2BookBid.Name = "dgvEx2BookBid";
-            this.dgvEx2BookBid.RowHeadersVisible = false;
-            this.dgvEx2BookBid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEx2BookBid.Size = new System.Drawing.Size(410, 311);
-            this.dgvEx2BookBid.TabIndex = 5;
-            // 
-            // dgvEx1BookBid
-            // 
-            this.dgvEx1BookBid.AllowUserToAddRows = false;
-            this.dgvEx1BookBid.AllowUserToDeleteRows = false;
-            this.dgvEx1BookBid.AllowUserToResizeRows = false;
-            this.dgvEx1BookBid.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvEx1BookBid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEx1BookBid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvEx1BookBid.Location = new System.Drawing.Point(0, 0);
-            this.dgvEx1BookBid.Name = "dgvEx1BookBid";
-            this.dgvEx1BookBid.RowHeadersVisible = false;
-            this.dgvEx1BookBid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEx1BookBid.Size = new System.Drawing.Size(410, 287);
-            this.dgvEx1BookBid.TabIndex = 4;
-            // 
-            // dgvEx1BookAsk
-            // 
-            this.dgvEx1BookAsk.AllowUserToAddRows = false;
-            this.dgvEx1BookAsk.AllowUserToDeleteRows = false;
-            this.dgvEx1BookAsk.AllowUserToResizeRows = false;
-            this.dgvEx1BookAsk.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvEx1BookAsk.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEx1BookAsk.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvEx1BookAsk.Location = new System.Drawing.Point(0, 0);
-            this.dgvEx1BookAsk.Name = "dgvEx1BookAsk";
-            this.dgvEx1BookAsk.RowHeadersVisible = false;
-            this.dgvEx1BookAsk.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEx1BookAsk.Size = new System.Drawing.Size(409, 287);
-            this.dgvEx1BookAsk.TabIndex = 2;
+            this.scPairInfo.Panel1.Controls.Add(this.splitContainer2);
+            this.scPairInfo.Size = new System.Drawing.Size(823, 652);
+            this.scPairInfo.SplitterDistance = 435;
+            this.scPairInfo.TabIndex = 4;
             // 
             // splitContainer2
             // 
@@ -419,26 +377,27 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.toolStripContainer3);
             this.splitContainer2.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer2.Size = new System.Drawing.Size(823, 652);
-            this.splitContainer2.SplitterDistance = 312;
+            this.splitContainer2.Size = new System.Drawing.Size(823, 435);
+            this.splitContainer2.SplitterDistance = 208;
             this.splitContainer2.TabIndex = 3;
             // 
-            // splitContainer3
+            // toolStripContainer2
             // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
             // 
-            // splitContainer3.Panel1
+            // toolStripContainer2.ContentPanel
             // 
-            this.splitContainer3.Panel1.Controls.Add(this.dgvEx2BookBid);
+            this.toolStripContainer2.ContentPanel.Controls.Add(this.splitContainer4);
+            this.toolStripContainer2.ContentPanel.Size = new System.Drawing.Size(823, 183);
+            this.toolStripContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStripContainer2.Location = new System.Drawing.Point(0, 0);
+            this.toolStripContainer2.Name = "toolStripContainer2";
+            this.toolStripContainer2.Size = new System.Drawing.Size(823, 208);
+            this.toolStripContainer2.TabIndex = 0;
+            this.toolStripContainer2.Text = "toolStripContainer2";
             // 
-            // splitContainer3.Panel2
+            // toolStripContainer2.TopToolStripPanel
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.dgvEx2BookAsk);
-            this.splitContainer3.Size = new System.Drawing.Size(823, 311);
-            this.splitContainer3.SplitterDistance = 410;
-            this.splitContainer3.TabIndex = 0;
+            this.toolStripContainer2.TopToolStripPanel.Controls.Add(this.toolStrip2);
             // 
             // splitContainer4
             // 
@@ -453,45 +412,39 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.dgvEx1BookAsk);
-            this.splitContainer4.Size = new System.Drawing.Size(823, 287);
+            this.splitContainer4.Size = new System.Drawing.Size(823, 183);
             this.splitContainer4.SplitterDistance = 410;
             this.splitContainer4.TabIndex = 0;
             // 
-            // toolStripContainer2
+            // dgvEx1BookBid
             // 
+            this.dgvEx1BookBid.AllowUserToAddRows = false;
+            this.dgvEx1BookBid.AllowUserToDeleteRows = false;
+            this.dgvEx1BookBid.AllowUserToResizeRows = false;
+            this.dgvEx1BookBid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvEx1BookBid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvEx1BookBid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvEx1BookBid.Location = new System.Drawing.Point(0, 0);
+            this.dgvEx1BookBid.Name = "dgvEx1BookBid";
+            this.dgvEx1BookBid.RowHeadersVisible = false;
+            this.dgvEx1BookBid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvEx1BookBid.Size = new System.Drawing.Size(410, 183);
+            this.dgvEx1BookBid.TabIndex = 4;
             // 
-            // toolStripContainer2.ContentPanel
+            // dgvEx1BookAsk
             // 
-            this.toolStripContainer2.ContentPanel.Controls.Add(this.splitContainer4);
-            this.toolStripContainer2.ContentPanel.Size = new System.Drawing.Size(823, 287);
-            this.toolStripContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer2.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer2.Name = "toolStripContainer2";
-            this.toolStripContainer2.Size = new System.Drawing.Size(823, 312);
-            this.toolStripContainer2.TabIndex = 0;
-            this.toolStripContainer2.Text = "toolStripContainer2";
-            // 
-            // toolStripContainer2.TopToolStripPanel
-            // 
-            this.toolStripContainer2.TopToolStripPanel.Controls.Add(this.toolStrip2);
-            // 
-            // toolStripContainer3
-            // 
-            // 
-            // toolStripContainer3.ContentPanel
-            // 
-            this.toolStripContainer3.ContentPanel.Controls.Add(this.splitContainer3);
-            this.toolStripContainer3.ContentPanel.Size = new System.Drawing.Size(823, 311);
-            this.toolStripContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.toolStripContainer3.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer3.Name = "toolStripContainer3";
-            this.toolStripContainer3.Size = new System.Drawing.Size(823, 336);
-            this.toolStripContainer3.TabIndex = 0;
-            this.toolStripContainer3.Text = "toolStripContainer3";
-            // 
-            // toolStripContainer3.TopToolStripPanel
-            // 
-            this.toolStripContainer3.TopToolStripPanel.Controls.Add(this.toolStrip3);
+            this.dgvEx1BookAsk.AllowUserToAddRows = false;
+            this.dgvEx1BookAsk.AllowUserToDeleteRows = false;
+            this.dgvEx1BookAsk.AllowUserToResizeRows = false;
+            this.dgvEx1BookAsk.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvEx1BookAsk.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvEx1BookAsk.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvEx1BookAsk.Location = new System.Drawing.Point(0, 0);
+            this.dgvEx1BookAsk.Name = "dgvEx1BookAsk";
+            this.dgvEx1BookAsk.RowHeadersVisible = false;
+            this.dgvEx1BookAsk.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvEx1BookAsk.Size = new System.Drawing.Size(409, 183);
+            this.dgvEx1BookAsk.TabIndex = 2;
             // 
             // toolStrip2
             // 
@@ -504,18 +457,6 @@
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(178, 25);
             this.toolStrip2.TabIndex = 0;
-            // 
-            // toolStrip3
-            // 
-            this.toolStrip3.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblExchange2,
-            this.lblPair2,
-            this.lblLastUpdate2});
-            this.toolStrip3.Location = new System.Drawing.Point(3, 0);
-            this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(178, 25);
-            this.toolStrip3.TabIndex = 0;
             // 
             // lblExchange1
             // 
@@ -534,6 +475,83 @@
             this.lblLastUpdate1.Name = "lblLastUpdate1";
             this.lblLastUpdate1.Size = new System.Drawing.Size(69, 22);
             this.lblLastUpdate1.Text = "LastUpdate:";
+            // 
+            // toolStripContainer3
+            // 
+            // 
+            // toolStripContainer3.ContentPanel
+            // 
+            this.toolStripContainer3.ContentPanel.Controls.Add(this.splitContainer3);
+            this.toolStripContainer3.ContentPanel.Size = new System.Drawing.Size(823, 198);
+            this.toolStripContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStripContainer3.Location = new System.Drawing.Point(0, 0);
+            this.toolStripContainer3.Name = "toolStripContainer3";
+            this.toolStripContainer3.Size = new System.Drawing.Size(823, 223);
+            this.toolStripContainer3.TabIndex = 0;
+            this.toolStripContainer3.Text = "toolStripContainer3";
+            // 
+            // toolStripContainer3.TopToolStripPanel
+            // 
+            this.toolStripContainer3.TopToolStripPanel.Controls.Add(this.toolStrip3);
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.dgvEx2BookBid);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.dgvEx2BookAsk);
+            this.splitContainer3.Size = new System.Drawing.Size(823, 198);
+            this.splitContainer3.SplitterDistance = 410;
+            this.splitContainer3.TabIndex = 0;
+            // 
+            // dgvEx2BookBid
+            // 
+            this.dgvEx2BookBid.AllowUserToAddRows = false;
+            this.dgvEx2BookBid.AllowUserToDeleteRows = false;
+            this.dgvEx2BookBid.AllowUserToResizeRows = false;
+            this.dgvEx2BookBid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvEx2BookBid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvEx2BookBid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvEx2BookBid.Location = new System.Drawing.Point(0, 0);
+            this.dgvEx2BookBid.Name = "dgvEx2BookBid";
+            this.dgvEx2BookBid.RowHeadersVisible = false;
+            this.dgvEx2BookBid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvEx2BookBid.Size = new System.Drawing.Size(410, 198);
+            this.dgvEx2BookBid.TabIndex = 5;
+            // 
+            // dgvEx2BookAsk
+            // 
+            this.dgvEx2BookAsk.AllowUserToAddRows = false;
+            this.dgvEx2BookAsk.AllowUserToDeleteRows = false;
+            this.dgvEx2BookAsk.AllowUserToResizeRows = false;
+            this.dgvEx2BookAsk.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvEx2BookAsk.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvEx2BookAsk.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvEx2BookAsk.Location = new System.Drawing.Point(0, 0);
+            this.dgvEx2BookAsk.Name = "dgvEx2BookAsk";
+            this.dgvEx2BookAsk.RowHeadersVisible = false;
+            this.dgvEx2BookAsk.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvEx2BookAsk.Size = new System.Drawing.Size(409, 198);
+            this.dgvEx2BookAsk.TabIndex = 6;
+            // 
+            // toolStrip3
+            // 
+            this.toolStrip3.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblExchange2,
+            this.lblPair2,
+            this.lblLastUpdate2});
+            this.toolStrip3.Location = new System.Drawing.Point(3, 0);
+            this.toolStrip3.Name = "toolStrip3";
+            this.toolStrip3.Size = new System.Drawing.Size(178, 25);
+            this.toolStrip3.TabIndex = 0;
             // 
             // lblExchange2
             // 
@@ -557,7 +575,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1438, 699);
+            this.ClientSize = new System.Drawing.Size(1611, 699);
             this.Controls.Add(this.toolStripContainer1);
             this.Name = "FormOffers";
             this.Text = "Offers";
@@ -580,34 +598,37 @@
             this.splitContainer1.ResumeLayout(false);
             this.pnlGrid.ResumeLayout(false);
             this.pnlFilters.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEx2BookAsk)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEx2BookBid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEx1BookBid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEx1BookAsk)).EndInit();
+            this.scPairInfo.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.scPairInfo)).EndInit();
+            this.scPairInfo.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
-            this.splitContainer4.Panel1.ResumeLayout(false);
-            this.splitContainer4.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
-            this.splitContainer4.ResumeLayout(false);
             this.toolStripContainer2.ContentPanel.ResumeLayout(false);
             this.toolStripContainer2.TopToolStripPanel.ResumeLayout(false);
             this.toolStripContainer2.TopToolStripPanel.PerformLayout();
             this.toolStripContainer2.ResumeLayout(false);
             this.toolStripContainer2.PerformLayout();
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+            this.splitContainer4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEx1BookBid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEx1BookAsk)).EndInit();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             this.toolStripContainer3.ContentPanel.ResumeLayout(false);
             this.toolStripContainer3.TopToolStripPanel.ResumeLayout(false);
             this.toolStripContainer3.TopToolStripPanel.PerformLayout();
             this.toolStripContainer3.ResumeLayout(false);
             this.toolStripContainer3.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+            this.splitContainer3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEx2BookBid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvEx2BookAsk)).EndInit();
             this.toolStrip3.ResumeLayout(false);
             this.toolStrip3.PerformLayout();
             this.ResumeLayout(false);
@@ -653,5 +674,6 @@
         private System.Windows.Forms.ToolStripLabel lblExchange2;
         private System.Windows.Forms.ToolStripLabel lblPair2;
         private System.Windows.Forms.ToolStripLabel lblLastUpdate2;
+        private System.Windows.Forms.SplitContainer scPairInfo;
     }
 }

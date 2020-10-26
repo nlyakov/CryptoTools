@@ -4,7 +4,7 @@ using CryptoTools.API.Objects;
 using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using Newtonsoft.Json;
+using CryptoTools.Generic.Helpers;
 using System;
 
 namespace CryptoTools.API.REST
@@ -26,7 +26,7 @@ namespace CryptoTools.API.REST
 
                 if (auth.Trim().Length > 0)
                 {
-                    dynamic authObj = JsonConvert.DeserializeObject(auth);
+                    dynamic authObj = auth.ToDynamic();
 
                     string key = authObj.key;
                     string secret = authObj.secret;
@@ -48,7 +48,7 @@ namespace CryptoTools.API.REST
             try
             {
                 string resp = pubClient.DownloadString(BaseUrlPub + "v1/symbols");
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 // Init supported pairs and margin pairs
                 int coin1, coin2;
@@ -96,7 +96,7 @@ namespace CryptoTools.API.REST
                 WorkState = enWorkingState.wsUpdateTicker;
 
                 string resp = pubClient.DownloadString(BaseUrlPub + "v1/market/allTickers");
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 for (int i = 0; i < respObj.data.ticker.Count; i++)
                 {
@@ -130,7 +130,7 @@ namespace CryptoTools.API.REST
                 WorkState = enWorkingState.wsGetOrderBook;
 
                 string resp = pubClient.DownloadString(BaseUrlPub + "v2/market/orderbook/level2?symbol=" + exObj.pair[pairid].pair);
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 ref OrderBook ob = ref exObj.pair[pairid].book;
 

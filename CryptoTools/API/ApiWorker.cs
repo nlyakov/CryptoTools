@@ -3,7 +3,7 @@ using CryptoTools.API.Objects;
 using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.Offers;
 using CryptoTools.API.Objects.Pairs;
-using fastJSON;
+using CryptoTools.Generic.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -40,7 +40,7 @@ namespace CryptoTools.API
                 new Bitfinex(),
                 new Bitstamp(),
                 new Bittrex(),
-                //new Cex(),
+                new Cex(),
                 new Huobi(),
                 new Idax(),
                 new Kraken(),
@@ -84,11 +84,11 @@ namespace CryptoTools.API
 
         private protected string FindExchangeAuth(string exname, string auth)
         {
-            dynamic authObj = JSON.Parse(auth);
+            dynamic authObj = auth.ToDynamic();
             for (int i = 0; i < authObj.exchanges.Count; i++)
             {
                 if (exname == (string)authObj.exchanges[i].name)
-                    return JsonConvert.SerializeObject(authObj.exchanges[i]);
+                    return JsonHelper.ToJson(authObj.exchanges[i]);
             }
             return "";
         }

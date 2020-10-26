@@ -2,15 +2,13 @@
 using CryptoTools.API.Interfaces;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
+using CryptoTools.Generic.Helpers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using fastJSON;
 
 namespace CryptoTools.API.WSS
 {
@@ -20,10 +18,9 @@ namespace CryptoTools.API.WSS
     delegate void SocketReady(sbyte sockid);
     internal abstract class WssCommunicator //: IApiCommunicator
     {
-        static int SubscriptionsPerSocket = 30;
-
         internal Exchange exObj;
 
+        protected int SubscriptionsPerSocket = 0;
         internal string BaseUrlAuth;
         internal string BaseUrlPub;
         private WssSocketObject authsocket;
@@ -62,6 +59,8 @@ namespace CryptoTools.API.WSS
 
         public void InitSockets()
         {
+            if (SubscriptionsPerSocket == 0)
+                SubscriptionsPerSocket = pidlist.Length;
             int count = (pidlist.Length + SubscriptionsPerSocket - 1) / SubscriptionsPerSocket;
 
             authsocket = new WssSocketObject(this, -1);
@@ -149,17 +148,15 @@ namespace CryptoTools.API.WSS
 
         private async Task Forward()
         {
-            var expConverter = new ExpandoObjectConverter();
             byte[] message;
             while (!QBufer.IsEmpty)
                 if (QBufer.TryDequeue(out message))
                 {
                     sbyte sockid = (sbyte)message[0];
                     string msg = Encoding.UTF8.GetString(message, 1, message.Length - 1);
-                    //dynamic respObj = JsonConvert.DeserializeObject(msg);
-                    //dynamic respObj = JObject.Parse(msg);
+                    dynamic respObj = msg.ToDynamic();
                     //msg = "[78478,[[0.0000294,1,47619.047619],[0.0000291,1,246],[0.00002902,1,344.58993797],[0.0000031,1,52],[0.0000021,1,15000],[0.000002,1,100000],[0.000001,1,100000],[4e-8,1,20000],[3e-8,1,6000],[2e-8,1,10000],[0.00016993,1,-6603.79668781],[0.00018171,1,-814.7341],[0.00018175,1,-1314.626],[0.00026864,1,-814.7341],[0.00026868,1,-1000],[0.0002698,1,-397.52747961],[0.00029,1,-1000],[0.00049,1,-746.692497],[0.00124,2,-180],[0.0019978,1,-100],[0.00251,2,-152],[0.00299,1,-499.5],[0.073929,1,-100],[0.1194,2,-303.49083346],[0.1494,1,-203.49083346],[0.18922,1,-100],[0.3201,1,-100],[0.5478,1,-100],[0.6654,1,-165.334],[0.9494,1,-100]]]";
-                    object respObj = JSON.ToObject(msg);
+                    //object respObj = JSON.ToObject(msg);
 
                     enResponseType rtype = ParseResponse(sockid, respObj);
                     switch (rtype)

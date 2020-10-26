@@ -1,5 +1,7 @@
 ﻿using CryptoTools.API.Interfaces;
+using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.OrderBooks;
+using System;
 
 namespace CryptoTools.API.Objects.Pairs
 {
@@ -35,6 +37,14 @@ namespace CryptoTools.API.Objects.Pairs
         public int UniqueID()
         {
             return (coin1 << 16) | (coin2 & 0xFFFF);
+        }
+
+        public double CoinVolume()
+        {
+            if (qty_precision == -1)
+                return coin_volume;
+            else
+                return Math.Round(coin_volume, qty_precision);
         }
     }
 }

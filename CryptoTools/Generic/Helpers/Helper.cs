@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CryptoTools.Generic
+namespace CryptoTools.Generic.Helpers
 {
     public static class Helper
     {

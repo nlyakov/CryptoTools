@@ -2,8 +2,7 @@
 using CryptoTools.API.Interfaces;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using CryptoTools.Generic.Helpers;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -17,6 +16,7 @@ namespace CryptoTools.API.WSS
 
         public WssBitfinex(Exchange exchange) : base(exchange)
         {
+            SubscriptionsPerSocket = 40;
             BaseUrlAuth = "wss://api.bitfinex.com/ws/2";
             BaseUrlPub = "wss://api-pub.bitfinex.com/ws/2";
             SocketConnectedHandler += InitSubscriptions;
@@ -30,16 +30,18 @@ namespace CryptoTools.API.WSS
                 WorkState = enWorkingState.wsInitialize;
                 if (auth.Trim().Length > 0)
                 {
-                    dynamic authObj = JsonConvert.DeserializeObject(auth);
+                    dynamic authObj = auth.ToDynamic();
 
                     string key = authObj.key;
                     string secret = authObj.secret;
 
                     hashMaker = new HMACSHA384(Encoding.UTF8.GetBytes(secret));
 
-                    authobj = new JObject();
-                    authobj.apiKey = key;
-                    authobj["event"] = "auth";
+                    authobj = new JsonObject()
+                    {
+                        { "apiKey", key },
+                        { "event", "auth" },
+                    };
 
                     authinfo = true;
                 }
@@ -63,20 +65,22 @@ namespace CryptoTools.API.WSS
             authobj.authSig = signature;
             authobj.authPayload = payload;
 
-            return JsonConvert.SerializeObject(authobj);
+            return JsonHelper.ToJson(authobj);
         }
 
         protected override string BuildSubscriptionRequest(ExchangePair ep)
         {
-            dynamic pairObj = new JObject();
-            pairObj["event"] = "subscribe";
-            pairObj.channel = "book";
-            pairObj.symbol = "t" + ep.pair;
-            pairObj.prec = "P0";
-            pairObj.freq = "F0";
-            pairObj.length = "50";
+            dynamic pairObj = new JsonObject()
+            {
+                { "event", "subscribe" },
+                { "channel", "book" },
+                { "symbol", "t" + ep.pair },
+                { "prec", "P0" },
+                { "freq", "F0" },
+                { "length", "50" },
+            };
 
-            return JsonConvert.SerializeObject(pairObj);
+            return JsonHelper.ToJson(pairObj);
         }
 
         protected override string BuildPongRequest()
@@ -106,7 +110,7 @@ namespace CryptoTools.API.WSS
 
         protected override DateTime OrderBookResponseParser(dynamic respObj, string msg, out OrderBookStruct[] data)
         {
-            if (respObj.data[1][0].GetType().Name.ToString() == "JArray")
+            if (JsonHelper.IsJsonArray(respObj.data[1][0]))
             {
                 data = new OrderBookStruct[respObj.data[1].Count];
                 for (int i = 0; i < respObj.data[1].Count; i++)
@@ -135,17 +139,14 @@ namespace CryptoTools.API.WSS
 
         protected override enResponseType ParseResponse(sbyte sockid, dynamic resp)
         {
-            //if (resp.data.GetType().Name.ToString() == "JArray")
-            if (resp.data is Array)
+            if (JsonHelper.IsJsonArray(resp.data))
             {
                 if (resp.data.Count > 1)
-                    //if (resp.data[1].GetType().Name.ToString() == "JArray")
-                    if (resp.data[1] is Array)
+                    if (JsonHelper.IsJsonArray(resp.data[1]))
                         if (resp.data[1].Count > 0)
                             return enResponseType.rtOrderBookData;
             }
-            //else if (resp.data.GetType().Name.ToString() == "JObject")
-            else if (resp.data is Object)
+            else if (JsonHelper.IsJsonObject(resp.data))
             {
                 if (resp.data["event"] != null)
                     if (resp.data["event"] == "auth")

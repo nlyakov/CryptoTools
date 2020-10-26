@@ -4,8 +4,7 @@ using CryptoTools.API.Objects;
 using CryptoTools.API.Objects.Coins;
 using CryptoTools.API.Objects.OrderBooks;
 using CryptoTools.API.Objects.Pairs;
-using CryptoTools.Generic;
-using Newtonsoft.Json;
+using CryptoTools.Generic.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -36,7 +35,7 @@ namespace CryptoTools.API.REST
 
                 if (auth.Trim().Length > 0)
                 {
-                    dynamic authObj = JsonConvert.DeserializeObject(auth);
+                    dynamic authObj = auth.ToDynamic();
 
                     cxuser = authObj.user;
                     cxkey = authObj.key;
@@ -63,7 +62,7 @@ namespace CryptoTools.API.REST
             try
             {
                 string resp = pubClient.DownloadString(BaseUrlPub + "currency_limits");
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 // Init supported pairs
                 int coin1, coin2;
@@ -150,7 +149,7 @@ namespace CryptoTools.API.REST
                         if (!marketlist.Contains("/" + ep.Value.name2))
                             marketlist += "/" + ep.Value.name2;
                 string resp = pubClient.DownloadString(BaseUrlPub + "tickers" + marketlist);
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 for (int i = 0; i < respObj.data.Count; i++)
                 {
@@ -183,7 +182,7 @@ namespace CryptoTools.API.REST
                 WorkState = enWorkingState.wsGetOrderBook;
 
                 string resp = pubClient.DownloadString(BaseUrlPub + "order_book/" + exObj.pair[pairid].pair + "/");
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 ref OrderBook ob = ref exObj.pair[pairid].book;
 
@@ -210,7 +209,7 @@ namespace CryptoTools.API.REST
         public override double getBalance(string cryptocoin)
         {
             string resp = SendRequest("balance/");
-            dynamic respObj = JsonConvert.DeserializeObject(resp);
+            dynamic respObj = resp.ToDynamic();
             double rslt = 0;
             for (int i = 0; i < respObj.Count; i++)
                 if (respObj[cryptocoin] != null)
@@ -240,7 +239,7 @@ namespace CryptoTools.API.REST
                 };
 
                 string resp = SendRequest("place_order/" + exObj.pair[obj.pairid].pair, paramlist);
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 LastOperatopnTime = DateTime.Now;
                 WorkState = enWorkingState.wsCompleted;
@@ -266,7 +265,7 @@ namespace CryptoTools.API.REST
                 };
 
                 string resp = SendRequest("cancel_order/", paramlist);
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 LastOperatopnTime = DateTime.Now;
                 WorkState = enWorkingState.wsCompleted;
@@ -287,7 +286,7 @@ namespace CryptoTools.API.REST
                 WorkState = enWorkingState.wsOrderCancelAll;
 
                 string resp = SendRequest("cancel_orders/" + exObj.pair[obj.pairid].pair);
-                dynamic respObj = JsonConvert.DeserializeObject(resp);
+                dynamic respObj = resp.ToDynamic();
 
                 LastOperatopnTime = DateTime.Now;
                 WorkState = enWorkingState.wsCompleted;
