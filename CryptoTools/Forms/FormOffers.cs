@@ -6,6 +6,7 @@ using CryptoTools.API.Objects.Pairs;
 using CryptoTools.Generic.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -48,6 +49,10 @@ namespace CryptoTools.Forms
             fm = formMain;
 
             scPairInfo.Panel2.Controls.Add(browser);
+            dgvEx1BookAsk.DoubleBuffered(true);
+            dgvEx1BookBid.DoubleBuffered(true);
+            dgvEx2BookAsk.DoubleBuffered(true);
+            dgvEx2BookBid.DoubleBuffered(true);
 
             InitFilters();
             InitList();
@@ -107,29 +112,14 @@ namespace CryptoTools.Forms
 
         private void InitGrid()
         {
-            bs.DataSource = typeof(GridRowStruct);
-            dgvOffers.DataSource = bs;
+            dgvOffers.DoubleBuffered(true);
 
-            dgvOffers.ColumnHeadersHeight = 35;
-            dgvOffers.Columns[0].HeaderText = "Pair";
-            dgvOffers.Columns[0].Width = 180;
-            dgvOffers.Columns[1].HeaderText = "Exchange 1";
-            dgvOffers.Columns[1].Width = 70;
-            dgvOffers.Columns[2].HeaderText = "Exchange 2";
-            dgvOffers.Columns[2].Width = 70;
-            dgvOffers.Columns[3].HeaderText = "Volume 1";
-            dgvOffers.Columns[3].Width = 70;
-            dgvOffers.Columns[4].HeaderText = "Volume 2";
-            dgvOffers.Columns[4].Width = 70;
-            dgvOffers.Columns[5].HeaderText = "Аmount";
-            dgvOffers.Columns[5].Width = 60;
             dgvOffers.Columns[6].HeaderText = "Taker" + Environment.NewLine + "Taker";
-            dgvOffers.Columns[6].Width = 60;
             dgvOffers.Columns[7].HeaderText = "Maker" + Environment.NewLine + "Taker";
-            dgvOffers.Columns[7].Width = 60;
             dgvOffers.Columns[8].HeaderText = "Taker" + Environment.NewLine + "Maker";
-            dgvOffers.Columns[8].Width = 60;
 
+            dgvOffers.AutoGenerateColumns = false;
+            dgvOffers.DataSource = bs;
             bs.DataSource = WorkingList;
         }
 
@@ -256,6 +246,7 @@ namespace CryptoTools.Forms
         {
             void ShowBook(DataGridView grid, ExchangePair ep, OrderBookRecords offers)
             {
+                ((ISupportInitialize)grid).BeginInit();
                 grid.ColumnCount = 3;
                 if (offers.type == enOrderBookType.obAsk)
                     grid.Columns[0].HeaderText = "ASK";
@@ -282,6 +273,7 @@ namespace CryptoTools.Forms
                         row++;
                     }
                 }
+                ((ISupportInitialize)grid).EndInit();
             }
 
             MakeHandler(0, offer.ex1pair.book);
@@ -325,6 +317,7 @@ namespace CryptoTools.Forms
                         }
                         else
                         {
+                            ((ISupportInitialize)grid).BeginInit();
                             if (offers.dict.Count > grid.RowCount)
                                 grid.RowCount = offers.dict.Count;
                             int row = 0;
@@ -342,6 +335,7 @@ namespace CryptoTools.Forms
                                 grid.Rows[row].Cells[2].Value = "";
                                 row++;
                             }
+                            ((ISupportInitialize)grid).EndInit();
                         }
                     }));
             }
@@ -384,7 +378,6 @@ namespace CryptoTools.Forms
             string html =
                 "<div class=\"tradingview-widget-container\">" +
                 "  <div id=\"tv_container\"></div>" +
-                "  <div class=\"tradingview-widget-copyright\"><a href=\"https://www.tradingview.com/symbols/" + pair1 + pair2 + "/\" rel=\"noopener\" target=\"_blank\"><span class=\"blue-text\">" + pair1 + pair2 + "</span></a> by TradingView</div>" +
                 "  <script type=\"text/javascript\" src=\"https://s3.tradingview.com/tv.js\"></script>" +
                 "  <script type=\"text/javascript\">" +
                 "  new TradingView.widget(" +
@@ -430,9 +423,9 @@ namespace CryptoTools.Forms
             int id = dgvOffers.SelectedRows[0].Index;
             if (id == -1)
                 return;
-             
-            ShowOrderBooks(WorkingList[id].offer);
+
             ShowChart(Coin.Symbol(WorkingList[id].offer.ex1pair.coin1), Coin.Symbol(WorkingList[id].offer.ex1pair.coin2));
+            ShowOrderBooks(WorkingList[id].offer);
         }
 
         private void FilterIndexChanged(object sender, EventArgs e)
@@ -447,9 +440,10 @@ namespace CryptoTools.Forms
             if (cbExchange2.SelectedIndex > 0)
                 WorkingList = WorkingList.FindAll(p => p.Exchange2 == cbExchange2.SelectedItem.ToString());
 
+            dgvOffers.SuspendLayout();
             bs.DataSource = WorkingList;
             SortGrid();
-            dgvOffers.Refresh();
+            dgvOffers.ResumeLayout(false);
         }
 
         private void SortGrid()

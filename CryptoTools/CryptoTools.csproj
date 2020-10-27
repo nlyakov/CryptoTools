@@ -175,6 +175,7 @@
     <Compile Include="Forms\FormBestTransferDeals.Designer.cs">
       <DependentUpon>FormBestTransferDeals.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormHelper.cs" />
     <Compile Include="Forms\FormTickers.cs">
       <SubType>Form</SubType>
     </Compile>
